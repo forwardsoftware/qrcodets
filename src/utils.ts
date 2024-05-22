@@ -243,6 +243,5 @@ export function getLostPoint(qrCode: QRCodeModel): number {
 
     const ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
     lostPoint += ratio * 10;
-
     return lostPoint;
 }

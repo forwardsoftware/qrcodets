@@ -73,10 +73,13 @@ export default class QRCodeModel {
             offset += dcCount;
             var rsPoly = getErrorCorrectPolynomial(ecCount);
             var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
-            var modPoly = rawPoly.mod(rsPoly); ecdata[r] = new Array(rsPoly.getLength() - 1);
+            var modPoly = rawPoly.mod(rsPoly);
+
+            ecdata[r] = new Array(rsPoly.getLength() - 1);
             for (var i = 0; i < ecdata[r].length; i++) {
                 if (modPoly) {
-                    var modIndex = i + modPoly.getLength() - ecdata[r].length; ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0;
+                    var modIndex = i + modPoly.getLength() - ecdata[r].length;
+                    ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0;
                 }
             }
         }
@@ -84,8 +87,20 @@ export default class QRCodeModel {
         for (var i = 0; i < rsBlocks.length; i++) { totalCodeCount += rsBlocks[i].totalCount; }
         var data = new Array(totalCodeCount);
         var index = 0;
-        for (var i = 0; i < maxDcCount; i++) { for (var r = 0; r < rsBlocks.length; r++) { if (i < dcdata[r].length) { data[index++] = dcdata[r][i]; } } }
-        for (var i = 0; i < maxEcCount; i++) { for (var r = 0; r < rsBlocks.length; r++) { if (i < ecdata[r].length) { data[index++] = ecdata[r][i]; } } }
+        for (var i = 0; i < maxDcCount; i++) {
+            for (var r = 0; r < rsBlocks.length; r++) {
+                if (i < dcdata[r].length) {
+                    data[index++] = dcdata[r][i];
+                }
+            }
+        }
+        for (var i = 0; i < maxEcCount; i++) {
+            for (var r = 0; r < rsBlocks.length; r++) {
+                if (i < ecdata[r].length) {
+                    data[index++] = ecdata[r][i];
+                }
+            }
+        }
         return data;
     }
 
@@ -110,7 +125,7 @@ export default class QRCodeModel {
         this.makeImpl(false, this.getBestMaskPattern());
     }
 
-    makeImpl(test: boolean, maskPattern: any) {
+    makeImpl(test: boolean, maskPattern: number) {
         this.moduleCount = this.typeNumber * 4 + 17;
         this.modules = new Array(this.moduleCount);
         for (var row = 0; row < this.moduleCount; row++) {

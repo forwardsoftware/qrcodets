@@ -29,11 +29,7 @@ export default class QRPolynomial {
         const num = new Array(this.getLength() + e.getLength() - 1);
         for (let i = 0; i < this.getLength(); i++) {
             for (let j = 0; j < e.getLength(); j++) {
-                const glogi = QRMath.glog(this.get(i))
-                const glogj = QRMath.glog(e.get(j))
-                if (glogi && glogj) {
-                    num[i + j] ^= QRMath.gexp(glogi + glogj);
-                }
+                num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
             }
         }
         return new QRPolynomial(num, 0);
@@ -43,26 +39,14 @@ export default class QRPolynomial {
         if (this.getLength() - e.getLength() < 0) {
             return this;
         }
-
-        const glog0 = QRMath.glog(this.get(0))
-        const gloge0 = QRMath.glog(e.get(0))
-
-        if (glog0 && gloge0) {
-            const ratio = glog0 - gloge0;
-
-            const num = new Array(this.getLength());
-            for (let i = 0; i < this.getLength(); i++) {
-                num[i] = this.get(i);
-            }
-            for (let i = 0; i < e.getLength(); i++) {
-                const glogei = QRMath.glog(e.get(i))
-                if (glogei) {
-                    num[i] ^= QRMath.gexp(glogei + ratio);
-                }
-            }
-
-            return new QRPolynomial(num, 0).mod(e);
+        const ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
+        const num = new Array(this.getLength());
+        for (let i = 0; i < this.getLength(); i++) {
+            num[i] = this.get(i);
         }
-        return null
+        for (let i = 0; i < e.getLength(); i++) {
+            num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
+        }
+        return new QRPolynomial(num, 0).mod(e);
     }
 }
