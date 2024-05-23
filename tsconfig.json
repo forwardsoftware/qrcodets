@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
+        "declaration": true,
         "target": "ES5",
-        "module": "ES6",
+        "module": "CommonJS",
+        "moduleResolution": "node",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
@@ -9,7 +11,6 @@
         "outDir": "./dist",
         "rootDir": "./src",
     },
-    "include": [
-        "src"
-    ]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.ts"]
 }

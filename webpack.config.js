@@ -18,5 +18,5 @@ module.exports = {
       },
     ],
   },
-  mode: 'development', // 模式，development 或 production
+  mode: 'production', // 模式，development 或 production
 };

@@ -25,8 +25,6 @@ import { _getAndroid, _getTypeNumber, _isSupportCanvas, _getAndroidVersion } fro
      * oQRCode.clear(); // Clear the QRCode.
      * oQRCode.makeCode("http://map.naver.com"); // Re-create the QRCode.
      *
-     * @param {HTMLElement|String} el target element or 'id' attribute of element.
-     * @param {String} text
      * @param {Object} vOption
      * @param {String} vOption.text QRCode link data
      * @param {Number} [vOption.width=256]
@@ -43,7 +41,7 @@ export default class QRCode {
     private _oQRCode: QRCodeModel | null;
     private _oDrawing?: Drawer;
 
-    constructor(vOption: QRCodeOptions) {
+    constructor(vOption: Partial<QRCodeOptions>) {
         this._htOption = {
             width: 256,
             height: 256,
