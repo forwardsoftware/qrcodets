@@ -1,5 +1,5 @@
-import QRCodeModel from "./QRCodeModel";
-import { QRCodeOptions } from "./interface";
+import QRCodeModel from "../QRCodeModel";
+import { QRCodeOptions } from "../interface";
 
 export default class SVGDrawer {
     private _el: HTMLElement;

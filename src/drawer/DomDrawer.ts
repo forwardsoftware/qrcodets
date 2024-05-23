@@ -1,5 +1,5 @@
-import QRCodeModel from "./QRCodeModel";
-import { QRCodeOptions } from "./interface";
+import QRCodeModel from "../QRCodeModel";
+import { QRCodeOptions } from "../interface";
 
 export default class DomDrawer {
     private _el: HTMLElement;

@@ -8,7 +8,7 @@ export default class QRRSBlock {
     }
 
     static RS_BLOCK_TABLE = RS_BLOCK_TABLE
-    static getRSBlocks(typeNumber: number, errorCorrectLevel: string) {
+    static getRSBlocks(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel) {
         var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
         if (rsBlock == undefined) { throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel); }
         var length = rsBlock.length / 3;
@@ -23,7 +23,7 @@ export default class QRRSBlock {
         }
         return list;
     }
-    static getRsBlockTable(typeNumber: number, errorCorrectLevel: any) {
+    static getRsBlockTable(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel) {
         switch (errorCorrectLevel) {
             case QRErrorCorrectLevel.L:
                 return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];

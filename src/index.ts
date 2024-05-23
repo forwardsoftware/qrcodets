@@ -1,9 +1,10 @@
-import DomDrawer from "./DomDrawer";
+import CanvasDrawer from "./drawer/CanvasDrawer";
+import DomDrawer from "./drawer/DomDrawer";
 import QRCodeModel from "./QRCodeModel";
-import SVGDrawer from "./SVGDrawer";
+import SVGDrawer from "./drawer/SVGDrawer";
 import { QRErrorCorrectLevel } from "./const"
 import { Drawer, QRCodeOptions } from "./interface";
-import { _getAndroid, _getTypeNumber } from "./utils";
+import { _getAndroid, _getTypeNumber, _isSupportCanvas, _getAndroidVersion } from "./utils";
 
 
 
@@ -36,11 +37,13 @@ import { _getAndroid, _getTypeNumber } from "./utils";
      */
 export default class QRCode {
     private _htOption: QRCodeOptions;
-    private _el: HTMLElement;
+    private _el?: HTMLElement | null;
+    private _android: boolean;
+    private _androidVersion: number;
     private _oQRCode: QRCodeModel | null;
-    private _oDrawing: Drawer;
+    private _oDrawing?: Drawer;
 
-    constructor(el: HTMLElement | string, text?: string, vOption?: QRCodeOptions,) {
+    constructor(vOption: QRCodeOptions) {
         this._htOption = {
             width: 256,
             height: 256,
@@ -50,27 +53,40 @@ export default class QRCode {
             correctLevel: QRErrorCorrectLevel.H
         };
 
-        if (typeof text === 'string') {
-            this._htOption.text = text
-
-        }
-
         // Overwrites options
         if (vOption) {
             this._htOption = { ...this._htOption, ...vOption }
         }
 
-        if (typeof el === "string") {
-            el = document.getElementById(el)!;
+        let el: HTMLElement | undefined | null
+
+        if (this._htOption?.id) {
+            el = document.getElementById(this._htOption?.id);
+        } else {
+            el = this._htOption?.element
         }
 
+        if (!el) {
+            console.warn("element dont exist");
+        }
+
+        this._android = _getAndroid();
+        this._androidVersion = _getAndroidVersion()
         this._el = el;
         this._oQRCode = null;
-        if (this._htOption.mode == "svg") {
-            this._oDrawing = new SVGDrawer(this._el, this._htOption)
-        } else {
-            this._oDrawing = new DomDrawer(this._el, this._htOption)
+        if (this._el) {
+            if (this._htOption.mode == "svg") {
+                this._oDrawing = new SVGDrawer(this._el, this._htOption)
+            } else {
+                if (!_isSupportCanvas()) {
+                    this._oDrawing = new DomDrawer(this._el, this._htOption)
+                } else {
+                    this._oDrawing = new CanvasDrawer(this._el, this._htOption)
+                }
+
+            }
         }
+
 
         if (this._htOption.text) {
             this.makeCode(this._htOption.text);
@@ -87,8 +103,24 @@ export default class QRCode {
             this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
             this._oQRCode.addData(sText);
             this._oQRCode.make();
-            this._el.title = sText;
-            this._oDrawing.draw(this._oQRCode);
+            if (this._el) {
+                this._el.title = sText;
+            }
+            this._oDrawing?.draw(this._oQRCode);
+            this.makeImage?.();
+        }
+    }
+
+    /**
+     * Make the Image from Canvas element
+     * - It occurs automatically
+     * - Android below 3 doesn't support Data-URI spec.
+     * 
+     * @private
+     */
+    makeImage(): void {
+        if (!this._android || this._androidVersion >= 3) {
+            this._oDrawing?.makeImage?.();
         }
     }
 
@@ -96,6 +128,7 @@ export default class QRCode {
      * Clear the QRCode
      */
     clear(): void {
-        this._oDrawing.clear();
+        this._oDrawing?.clear();
     }
 }
+

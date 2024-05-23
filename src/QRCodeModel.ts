@@ -10,23 +10,23 @@ export default class QRCodeModel {
     errorCorrectLevel: QRErrorCorrectLevel;
     modules: (boolean | null)[][];
     moduleCount: number;
-    dataCache: any;
+    dataCache?: number[];
     dataList: QR8bitByte[];
 
 
     static PAD0 = 0xEC;
     static PAD1 = 0x11;
 
-    constructor(typeNumber: number, errorCorrectLevel: any) {
+    constructor(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel) {
         this.typeNumber = typeNumber;
         this.errorCorrectLevel = errorCorrectLevel;
         this.modules = [];
         this.moduleCount = 0;
-        this.dataCache = null;
+        this.dataCache = undefined;
         this.dataList = [];
     }
 
-    static createData(typeNumber: number, errorCorrectLevel: any, dataList: string | any[]) {
+    static createData(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel, dataList: QR8bitByte[]) {
         var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
         var buffer = new QRBitBuffer();
         for (var i = 0; i < dataList.length; i++) {
@@ -55,12 +55,12 @@ export default class QRCodeModel {
         return QRCodeModel.createBytes(buffer, rsBlocks);
     }
 
-    static createBytes = function (buffer: { buffer: number[]; }, rsBlocks: string | any[]) {
+    static createBytes = function (buffer: QRBitBuffer, rsBlocks: QRRSBlock[]) {
         var offset = 0;
         var maxDcCount = 0;
         var maxEcCount = 0;
-        var dcdata = new Array(rsBlocks.length);
-        var ecdata = new Array(rsBlocks.length);
+        var dcdata: number[][] = new Array(rsBlocks.length);
+        var ecdata: number[][] = new Array(rsBlocks.length);
         for (var r = 0; r < rsBlocks.length; r++) {
             var dcCount = rsBlocks[r].dataCount;
             var ecCount = rsBlocks[r].totalCount - dcCount;
@@ -85,7 +85,7 @@ export default class QRCodeModel {
         }
         var totalCodeCount = 0;
         for (var i = 0; i < rsBlocks.length; i++) { totalCodeCount += rsBlocks[i].totalCount; }
-        var data = new Array(totalCodeCount);
+        var data: number[] = new Array(totalCodeCount);
         var index = 0;
         for (var i = 0; i < maxDcCount; i++) {
             for (var r = 0; r < rsBlocks.length; r++) {
@@ -107,7 +107,7 @@ export default class QRCodeModel {
     addData(data: string) {
         var newData = new QR8bitByte(data);
         this.dataList.push(newData);
-        this.dataCache = null;
+        this.dataCache = undefined;
     }
 
     isDark(row: number, col: number) {
@@ -177,27 +177,27 @@ export default class QRCodeModel {
         return pattern;
     }
 
-    createMovieClip(target_mc: { createEmptyMovieClip: (arg0: any, arg1: any) => any; }, instance_name: any, depth: any) {
-        var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
-        var cs = 1;
-        this.make();
-        for (var row = 0; row < this.modules.length; row++) {
-            var y = row * cs;
-            for (var col = 0; col < this.modules[row].length; col++) {
-                var x = col * cs;
-                var dark = this.modules[row][col];
-                if (dark) {
-                    qr_mc.beginFill(0, 100);
-                    qr_mc.moveTo(x, y);
-                    qr_mc.lineTo(x + cs, y);
-                    qr_mc.lineTo(x + cs, y + cs);
-                    qr_mc.lineTo(x, y + cs);
-                    qr_mc.endFill();
-                }
-            }
-        }
-        return qr_mc;
-    }
+    // createMovieClip(target_mc: { createEmptyMovieClip: (arg0: any, arg1: any) => any; }, instance_name: any, depth: any) {
+    //     var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+    //     var cs = 1;
+    //     this.make();
+    //     for (var row = 0; row < this.modules.length; row++) {
+    //         var y = row * cs;
+    //         for (var col = 0; col < this.modules[row].length; col++) {
+    //             var x = col * cs;
+    //             var dark = this.modules[row][col];
+    //             if (dark) {
+    //                 qr_mc.beginFill(0, 100);
+    //                 qr_mc.moveTo(x, y);
+    //                 qr_mc.lineTo(x + cs, y);
+    //                 qr_mc.lineTo(x + cs, y + cs);
+    //                 qr_mc.lineTo(x, y + cs);
+    //                 qr_mc.endFill();
+    //             }
+    //         }
+    //     }
+    //     return qr_mc;
+    // }
 
     setupTimingPattern() {
         for (var r = 8; r < this.moduleCount - 8; r++) {
@@ -264,7 +264,7 @@ export default class QRCodeModel {
         this.modules[this.moduleCount - 8][8] = (!test);
     }
 
-    mapData(data: string | any[] | null, maskPattern: any) {
+    mapData(data: number[], maskPattern: number) {
         var inc = -1;
         var row = this.moduleCount - 1;
         var bitIndex = 7;

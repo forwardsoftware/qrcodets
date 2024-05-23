@@ -20,6 +20,16 @@ export function _getAndroid() {
     return android;
 }
 
+export function _getAndroidVersion() {
+    var sAgent = navigator.userAgent;
+    var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
+    let version = 0
+    if (aMat && aMat[1]) {
+        version = parseFloat(aMat[1]);
+    }
+    return version
+}
+
 /**
     * Get the type by string length
     * 
@@ -64,9 +74,21 @@ export function _getTypeNumber(sText: string, nCorrectLevel: number): number {
     return nType;
 }
 
-export function _getUTF8Length(sText: any) {
-    var replacedText = encodeURI(sText).toString().replace(/\%[0-9a-fA-F]{2}/g, 'a');
-    return replacedText.length + (replacedText.length != sText ? 3 : 0);
+export function _getUTF8Length(sText: string) {
+    let utf8Length = 0;
+    for (let i = 0; i < sText.length; i++) {
+        const charCode = sText.charCodeAt(i);
+        if (charCode < 0x80) {
+            utf8Length += 1;
+        } else if (charCode < 0x800) {
+            utf8Length += 2;
+        } else if (charCode < 0x10000) {
+            utf8Length += 3;
+        } else if (charCode < 0x200000) {
+            utf8Length += 4;
+        }
+    }
+    return utf8Length;
 }
 
 export function getBCHTypeInfo(data: number): number {
@@ -244,4 +266,8 @@ export function getLostPoint(qrCode: QRCodeModel): number {
     const ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
     lostPoint += ratio * 10;
     return lostPoint;
+}
+
+export function _isSupportCanvas() {
+    return typeof CanvasRenderingContext2D != "undefined";
 }

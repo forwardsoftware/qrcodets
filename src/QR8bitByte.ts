@@ -1,3 +1,4 @@
+import QRBitBuffer from "./QRBitBuffer";
 import { QRMode } from "./const";
 
 export default class QR8bitByte {
@@ -41,7 +42,7 @@ export default class QR8bitByte {
     getLength() {
         return this.parsedData.length;
     }
-    write(buffer: any) {
+    write(buffer: QRBitBuffer) {
         for (var i = 0, l = this.parsedData.length; i < l; i++) {
             buffer.put(this.parsedData[i], 8);
         }
