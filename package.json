@@ -1,6 +1,6 @@
 {
   "name": "qrcodets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "qrcodejs with full typescript hint and ES6 export",
   "main": "/dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,6 +8,7 @@
     "build": "webpack"
   },
   "author": "lilRedaka",
+  "files": ["dist"],
   "license": "ISC",
   "devDependencies": {
     "ts-loader": "^9.5.1",
