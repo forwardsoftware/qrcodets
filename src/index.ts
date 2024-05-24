@@ -33,7 +33,7 @@ import { _getAndroid, _getTypeNumber, _isSupportCanvas, _getAndroidVersion } fro
      * @param {String} [vOption.colorLight="#ffffff"]
      * @param {QRCode.CorrectLevel} [vOption.correctLevel=QRCode.CorrectLevel.H] [L|M|Q|H] 
      */
-export default class QRCode {
+class QRCode {
     private _htOption: QRCodeOptions;
     private _el?: HTMLElement | null;
     private _android: boolean;
@@ -130,3 +130,4 @@ export default class QRCode {
     }
 }
 
+export default QRCode
