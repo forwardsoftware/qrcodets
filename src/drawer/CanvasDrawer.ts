@@ -27,7 +27,6 @@ export default class CanvasDrawer {
         this._elImage.style.display = "none";
         this._el.appendChild(this._elImage);
         this._bSupportDataURI = null;
-        console.log("origin:", this)
     }
 
     private _getAndroid(): number | null {
