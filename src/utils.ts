@@ -21,13 +21,12 @@ export function _getAndroid() {
 }
 
 export function _getAndroidVersion() {
-    var sAgent = navigator.userAgent;
-    var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
-    let version = 0
+    const aMat = navigator.userAgent.toString().match(/android ([0-9]\.[0-9])/i);
     if (aMat && aMat[1]) {
-        version = parseFloat(aMat[1]);
+        return parseFloat(aMat[1]);
     }
-    return version
+
+    return 0;
 }
 
 /**
