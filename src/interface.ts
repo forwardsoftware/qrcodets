@@ -1,4 +1,4 @@
-import type { QRErrorCorrectLevel } from "./const";
+import type { QRErrorCorrectLevel } from "./enums";
 
 export interface QRCodeOptions {
   id?: string;

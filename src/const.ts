@@ -1,10 +1,3 @@
-export enum QRErrorCorrectLevel {
-    L = 1,
-    M = 0,
-    Q = 3,
-    H = 2
-}
-
 export enum QRMode {
     MODE_NUMBER = 1 << 0,
     MODE_ALPHA_NUM = 1 << 1,

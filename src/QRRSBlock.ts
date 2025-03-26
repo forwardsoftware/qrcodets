@@ -1,4 +1,5 @@
-import { QRErrorCorrectLevel, RS_BLOCK_TABLE } from "./const";
+import { RS_BLOCK_TABLE } from "./const";
+import { QRErrorCorrectLevel } from "./enums";
 
 export default class QRRSBlock {
     totalCount: number

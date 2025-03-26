@@ -1,7 +1,8 @@
 import { QRMath } from "./QRMath";
 import QRPolynomial from "./QRPolynomial";
 import type { QRCodeModel } from "./QRCodeModel";
-import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRCodeLimitLength, QRErrorCorrectLevel, QRMaskPattern, QRMode } from "./const";
+import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRCodeLimitLength, QRMaskPattern, QRMode } from "./const";
+import { QRErrorCorrectLevel } from "./enums";
 
 // android 2.x doesn't support Data-URI spec
 export function _getAndroid() {

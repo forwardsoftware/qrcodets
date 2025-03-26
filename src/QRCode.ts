@@ -1,6 +1,6 @@
-import { QRErrorCorrectLevel } from "./const";
 import { CanvasDrawer, DomDrawer, SVGDrawer } from "./drawers";
 import type { QRCodeDrawer } from "./drawers";
+import { QRErrorCorrectLevel } from "./enums";
 import type { QRCodeOptions } from "./interface";
 import { QRCodeModel } from "./QRCodeModel";
 import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } from "./utils";
