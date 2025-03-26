@@ -17,7 +17,7 @@ npm i @forward-software/qrcodets
 You can import and use QRCodeTS in your project as follows:
 
 ```javascript
-import QRCode from "@forward-software/qrcodets";
+import { QRCode } from "@forward-software/qrcodets";
 
 const params = {
   id: "qrcode",
