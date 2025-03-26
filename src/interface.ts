@@ -5,17 +5,17 @@ export interface QRCodeOptions {
 
   element?: HTMLElement;
 
-  width?: number;
+  width: number;
 
-  height?: number;
+  height: number;
 
-  typeNumber?: number;
+  typeNumber: number;
 
   colorDark: string;
 
   colorLight: string;
 
-  correctLevel?: QRErrorCorrectLevel;
+  correctLevel: QRErrorCorrectLevel;
 
   text?: string;
 

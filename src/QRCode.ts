@@ -5,6 +5,15 @@ import type { QRCodeOptions } from "./interface";
 import { QRCodeModel } from "./QRCodeModel";
 import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } from "./utils";
 
+const DEFAULT_QRCODE_OPTIONS: QRCodeOptions = {
+  width: 256,
+  height: 256,
+  typeNumber: 4,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+  correctLevel: QRErrorCorrectLevel.H,
+};
+
 /**
  * @class QRCode
  * @constructor
@@ -32,23 +41,13 @@ import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } fro
 export class QRCode {
   private _htOption: QRCodeOptions;
   private _el?: HTMLElement | null;
-  private _oQRCode: QRCodeModel | null;
   private _oDrawing?: QRCodeDrawer;
 
   constructor(vOption: Partial<QRCodeOptions>) {
     this._htOption = {
-      width: 256,
-      height: 256,
-      typeNumber: 4,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRErrorCorrectLevel.H,
+      ...DEFAULT_QRCODE_OPTIONS,
+      ...vOption,
     };
-
-    // Overwrites options
-    if (vOption) {
-      this._htOption = { ...this._htOption, ...vOption };
-    }
 
     let el: HTMLElement | undefined | null;
 
@@ -63,7 +62,6 @@ export class QRCode {
     }
 
     this._el = el;
-    this._oQRCode = null;
     if (this._el) {
       if (this._htOption.mode == "svg") {
         this._oDrawing = new SVGDrawer(this._el, this._htOption);
@@ -87,15 +85,14 @@ export class QRCode {
    * @param {String} sText link data
    */
   makeCode(sText: string): void {
-    if (this._htOption.correctLevel) {
-      this._oQRCode = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
-      this._oQRCode.addData(sText);
-      this._oQRCode.make();
-      if (this._el) {
-        this._el.title = sText;
-      }
-      this._oDrawing?.draw(this._oQRCode);
+    const qrCodeModel = new QRCodeModel(_getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
+    qrCodeModel.addData(sText);
+    qrCodeModel.make();
+    if (this._el) {
+      this._el.title = sText;
     }
+
+    this._oDrawing?.draw(qrCodeModel);
   }
 
   /**
