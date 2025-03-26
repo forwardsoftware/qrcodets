@@ -1,22 +1,23 @@
-import QRCodeModel from "./QRCodeModel";
-import { QRErrorCorrectLevel } from "./const";
+import type { QRErrorCorrectLevel } from "./const";
 
 export interface QRCodeOptions {
-    id?: string,
-    element?: HTMLElement,
-    width?: number;
-    height?: number;
-    typeNumber?: number;
-    colorDark: string;
-    colorLight: string;
-    correctLevel?: QRErrorCorrectLevel;
-    useSVG?: boolean;
-    text?: string;
-    mode?: "svg" | "dom"
-}
+  id?: string;
 
-export interface Drawer {
-    draw: (oQRCode: QRCodeModel) => void
-    clear: () => void
-    makeImage?: () => void
+  element?: HTMLElement;
+
+  width?: number;
+
+  height?: number;
+
+  typeNumber?: number;
+
+  colorDark: string;
+
+  colorLight: string;
+
+  correctLevel?: QRErrorCorrectLevel;
+
+  text?: string;
+
+  mode?: "svg" | "dom";
 }

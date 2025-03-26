@@ -1,9 +1,8 @@
 import { QRErrorCorrectLevel } from "./const";
-import CanvasDrawer from "./drawer/CanvasDrawer";
-import DomDrawer from "./drawer/DomDrawer";
-import SVGDrawer from "./drawer/SVGDrawer";
-import { Drawer, QRCodeOptions } from "./interface";
-import QRCodeModel from "./QRCodeModel";
+import { CanvasDrawer, DomDrawer, SVGDrawer } from "./drawers";
+import type { QRCodeDrawer } from "./drawers";
+import type { QRCodeOptions } from "./interface";
+import { QRCodeModel } from "./QRCodeModel";
 import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } from "./utils";
 
 /**
@@ -33,10 +32,8 @@ import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } fro
 export class QRCode {
   private _htOption: QRCodeOptions;
   private _el?: HTMLElement | null;
-  private _android: boolean;
-  private _androidVersion: number;
   private _oQRCode: QRCodeModel | null;
-  private _oDrawing?: Drawer;
+  private _oDrawing?: QRCodeDrawer;
 
   constructor(vOption: Partial<QRCodeOptions>) {
     this._htOption = {
@@ -65,8 +62,6 @@ export class QRCode {
       console.warn("element dont exist");
     }
 
-    this._android = _getAndroid();
-    this._androidVersion = _getAndroidVersion();
     this._el = el;
     this._oQRCode = null;
     if (this._el) {
@@ -100,20 +95,6 @@ export class QRCode {
         this._el.title = sText;
       }
       this._oDrawing?.draw(this._oQRCode);
-      this.makeImage?.();
-    }
-  }
-
-  /**
-   * Make the Image from Canvas element
-   * - It occurs automatically
-   * - Android below 3 doesn't support Data-URI spec.
-   *
-   * @private
-   */
-  makeImage(): void {
-    if (!this._android || this._androidVersion >= 3) {
-      this._oDrawing?.makeImage?.();
     }
   }
 
