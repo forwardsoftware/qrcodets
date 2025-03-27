@@ -4,32 +4,6 @@ import type { QRCodeModel } from "./QRCodeModel";
 import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRCodeLimitLength, QRMaskPattern, QRMode } from "./const";
 import { QRErrorCorrectLevel } from "./enums";
 
-// android 2.x doesn't support Data-URI spec
-export function _getAndroid() {
-    var android = false;
-    var sAgent = navigator.userAgent;
-
-    if (/android/i.test(sAgent)) { // android
-        android = true;
-        var aMat = sAgent.toString().match(/android ([0-9]\.[0-9])/i);
-
-        if (aMat && aMat[1]) {
-            android = !!parseFloat(aMat[1]);
-        }
-    }
-
-    return android;
-}
-
-export function _getAndroidVersion() {
-    const aMat = navigator.userAgent.toString().match(/android ([0-9]\.[0-9])/i);
-    if (aMat && aMat[1]) {
-        return parseFloat(aMat[1]);
-    }
-
-    return 0;
-}
-
 /**
     * Get the type by string length
     * 
@@ -266,8 +240,4 @@ export function getLostPoint(qrCode: QRCodeModel): number {
     const ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
     lostPoint += ratio * 10;
     return lostPoint;
-}
-
-export function _isSupportCanvas() {
-    return typeof CanvasRenderingContext2D != "undefined";
 }

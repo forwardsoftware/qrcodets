@@ -1,6 +1,5 @@
 import type { QRCodeOptions } from "../interface";
 import type { QRCodeModel } from "../QRCodeModel";
-import { _getAndroid, _getAndroidVersion, _isSupportCanvas } from "../utils";
 
 import type { QRCodeDrawer } from "./types";
 
@@ -25,7 +24,7 @@ export class HTMLDrawer implements QRCodeDrawer {
     this.element = element;
     this.qrCodeOptions = qrCodeOptions;
 
-    if (_isSupportCanvas()) {
+    if (this.isCanvasSupported()) {
       this.canvasElement = document.createElement("canvas");
       this.canvasElement.width = this.qrCodeOptions.width ?? 0;
       this.canvasElement.height = this.qrCodeOptions.height ?? 0;
@@ -47,7 +46,7 @@ export class HTMLDrawer implements QRCodeDrawer {
    * @param qrCodeModel
    */
   public draw(qrCodeModel: QRCodeModel): void {
-    if (!_isSupportCanvas()) {
+    if (!this.isCanvasSupported()) {
       return this.drawWithDOMElements(qrCodeModel);
     }
 
@@ -58,7 +57,7 @@ export class HTMLDrawer implements QRCodeDrawer {
    * Clear the QRCode
    */
   public clear(): void {
-    if (!_isSupportCanvas()) {
+    if (!this.isCanvasSupported()) {
       return this.clearDOMElements();
     }
 
@@ -107,9 +106,31 @@ export class HTMLDrawer implements QRCodeDrawer {
       }
     }
 
-    if (!_getAndroid() || _getAndroidVersion() >= 3) {
+    /**
+     * Make the Image from Canvas element
+     * - It occurs automatically
+     * - Android below 3 doesn't support Data-URI spec.
+     */
+    const [isAndroid, androidVersion] = this.getAndroidPlatformDetails();
+    if (!isAndroid || androidVersion >= 3) {
       this._safeSetDataURI(this._onMakeImage.bind(this), () => {});
     }
+  }
+
+  private getAndroidPlatformDetails(): [boolean, number] {
+    const userAgent = navigator.userAgent;
+
+    if (/android/i.test(userAgent)) {
+      const aMat = userAgent.toString().match(/android ([0-9]\.[0-9])/i);
+      if (aMat && aMat[1]) {
+        const version = parseFloat(aMat[1]);
+        return [!!version, version];
+      }
+
+      return [true, 0];
+    }
+
+    return [false, -1];
   }
 
   private _safeSetDataURI(successCallback: () => void, errorCallback: () => void): void {
@@ -218,5 +239,9 @@ export class HTMLDrawer implements QRCodeDrawer {
    */
   private clearDOMElements(): void {
     this.element.innerHTML = "";
+  }
+
+  private isCanvasSupported(): boolean {
+    return typeof CanvasRenderingContext2D != "undefined";
   }
 }
