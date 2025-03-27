@@ -1,4 +1,4 @@
-export * from "./types";
-export { CanvasDrawer } from "./CanvasDrawer";
-export { DomDrawer } from "./DomDrawer";
+export { HTMLDrawer } from "./HTMLDrawer";
 export { SVGDrawer } from "./SVGDrawer";
+
+export * from "./types";

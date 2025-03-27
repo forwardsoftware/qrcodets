@@ -1,9 +1,9 @@
-import { CanvasDrawer, DomDrawer, SVGDrawer } from "./drawers";
+import { HTMLDrawer, SVGDrawer } from "./drawers";
 import type { QRCodeDrawer } from "./drawers";
 import { QRErrorCorrectLevel } from "./enums";
 import type { QRCodeOptions } from "./interface";
 import { QRCodeModel } from "./QRCodeModel";
-import { _getAndroid, _getAndroidVersion, _getTypeNumber, _isSupportCanvas } from "./utils";
+import { _getTypeNumber } from "./utils";
 
 const DEFAULT_QRCODE_OPTIONS: QRCodeOptions = {
   width: 256,
@@ -66,11 +66,7 @@ export class QRCode {
       if (this._htOption.mode == "svg") {
         this._oDrawing = new SVGDrawer(this._el, this._htOption);
       } else {
-        if (!_isSupportCanvas()) {
-          this._oDrawing = new DomDrawer(this._el, this._htOption);
-        } else {
-          this._oDrawing = new CanvasDrawer(this._el, this._htOption);
-        }
+        this._oDrawing = new HTMLDrawer(this._el, this._htOption);
       }
     }
 
