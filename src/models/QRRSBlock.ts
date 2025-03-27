@@ -1,7 +1,8 @@
-import { RS_BLOCK_TABLE } from "./const";
-import { QRErrorCorrectLevel } from "./enums";
+import { QRErrorCorrectLevel } from "../enums";
 
-export default class QRRSBlock {
+import { RS_BLOCK_TABLE } from "./constants";
+
+export class QRRSBlock {
     totalCount: number
     dataCount: number
     constructor(totalCount: number, dataCount: number) {

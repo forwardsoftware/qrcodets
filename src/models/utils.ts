@@ -1,69 +1,7 @@
+import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRMaskPattern, QRMode } from "./constants";
 import { QRMath } from "./QRMath";
-import QRPolynomial from "./QRPolynomial";
+import { QRPolynomial } from "./QRPolynomial";
 import type { QRCodeModel } from "./QRCodeModel";
-import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRCodeLimitLength, QRMaskPattern, QRMode } from "./const";
-import { QRErrorCorrectLevel } from "./enums";
-
-/**
-    * Get the type by string length
-    * 
-    * @private
-    * @param {String} sText
-    * @param {Number} nCorrectLevel
-    * @return {Number} type
-    */
-export function _getTypeNumber(sText: string, nCorrectLevel: number): number {
-    var nType = 1;
-    var length = _getUTF8Length(sText);
-
-    for (var i = 0, len = QRCodeLimitLength.length; i <= len; i++) {
-        var nLimit = 0;
-
-        switch (nCorrectLevel) {
-            case QRErrorCorrectLevel.L:
-                nLimit = QRCodeLimitLength[i][0];
-                break;
-            case QRErrorCorrectLevel.M:
-                nLimit = QRCodeLimitLength[i][1];
-                break;
-            case QRErrorCorrectLevel.Q:
-                nLimit = QRCodeLimitLength[i][2];
-                break;
-            case QRErrorCorrectLevel.H:
-                nLimit = QRCodeLimitLength[i][3];
-                break;
-        }
-
-        if (length <= nLimit) {
-            break;
-        } else {
-            nType++;
-        }
-    }
-
-    if (nType > QRCodeLimitLength.length) {
-        throw new Error("Too long data");
-    }
-
-    return nType;
-}
-
-export function _getUTF8Length(sText: string) {
-    let utf8Length = 0;
-    for (let i = 0; i < sText.length; i++) {
-        const charCode = sText.charCodeAt(i);
-        if (charCode < 0x80) {
-            utf8Length += 1;
-        } else if (charCode < 0x800) {
-            utf8Length += 2;
-        } else if (charCode < 0x10000) {
-            utf8Length += 3;
-        } else if (charCode < 0x200000) {
-            utf8Length += 4;
-        }
-    }
-    return utf8Length;
-}
 
 export function getBCHTypeInfo(data: number): number {
     let d = data << 10;

@@ -1,5 +1,5 @@
-import type { QRCodeModel } from "../QRCodeModel";
 import type { QRCodeOptions } from "../interface";
+import type { QRCodeModel } from "../models";
 
 import type { QRCodeDrawer } from "./types";
 

@@ -1,4 +1,4 @@
-import { EXP_TABLE, LOG_TABLE } from "./const";
+import { EXP_TABLE, LOG_TABLE } from "./constants";
 
 export class QRMath {
     static EXP_TABLE = EXP_TABLE

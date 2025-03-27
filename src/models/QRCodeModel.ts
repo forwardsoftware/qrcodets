@@ -1,8 +1,9 @@
-import { QRErrorCorrectLevel } from "./enums";
-import QR8bitByte from "./QR8bitByte";
-import QRBitBuffer from "./QRBitBuffer";
-import QRPolynomial from "./QRPolynomial";
-import QRRSBlock from "./QRRSBlock";
+import { QRErrorCorrectLevel } from "../enums";
+
+import { QR8bitByte } from "./QR8bitByte";
+import { QRBitBuffer } from "./QRBitBuffer";
+import { QRPolynomial } from "./QRPolynomial";
+import { QRRSBlock } from "./QRRSBlock";
 import {
   getBCHTypeInfo,
   getBCHTypeNumber,

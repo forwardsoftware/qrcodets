@@ -1,6 +1,6 @@
 import { QRMath } from "./QRMath";
 
-export default class QRPolynomial {
+export class QRPolynomial {
     private num: number[];
 
     constructor(num: number[], shift: number) {

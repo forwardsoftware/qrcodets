@@ -1,0 +1,1 @@
+export { QRCodeModel } from "./QRCodeModel";

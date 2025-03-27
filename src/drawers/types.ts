@@ -1,4 +1,4 @@
-import type { QRCodeModel } from "../QRCodeModel";
+import type { QRCodeModel } from "../models";
 
 export interface QRCodeDrawer {
   draw: (qrCodeModel: QRCodeModel) => void;

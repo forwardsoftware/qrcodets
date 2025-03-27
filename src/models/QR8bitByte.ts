@@ -1,7 +1,7 @@
-import QRBitBuffer from "./QRBitBuffer";
-import { QRMode } from "./const";
+import { QRMode } from "./constants";
+import { QRBitBuffer } from "./QRBitBuffer";
 
-export default class QR8bitByte {
+export class QR8bitByte {
     mode: number = QRMode.MODE_8BIT_BYTE;;
     data: string;
     parsedData: number[];

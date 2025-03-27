@@ -1,4 +1,4 @@
-export default class QRBitBuffer {
+export class QRBitBuffer {
     buffer: number[] = [];
     length: number = 0;
 
