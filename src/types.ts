@@ -1,5 +1,10 @@
 import type { QRErrorCorrectLevel } from "./enums";
-import type { QRCodeModel } from "./models";
+
+export interface QRCodeModel {
+  getModuleCount(): number;
+
+  isDark(row: number, col: number): boolean;
+}
 
 export interface QRCodeOptions {
   id?: string;
@@ -24,7 +29,7 @@ export interface QRCodeOptions {
 }
 
 export interface QRCodeDrawer {
-  draw: (qrCodeModel: QRCodeModel) => void;
+  draw(qrCodeModel: QRCodeModel): void;
 
-  clear: () => void;
+  clear(): void;
 }

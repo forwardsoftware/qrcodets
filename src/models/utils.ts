@@ -1,7 +1,8 @@
+import type { QRCodeModel } from "../types";
+
 import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRMaskPattern, QRMode } from "./constants";
 import { QRMath } from "./QRMath";
 import { QRPolynomial } from "./QRPolynomial";
-import type { QRCodeModel } from "./QRCodeModel";
 
 export function getBCHTypeInfo(data: number): number {
     let d = data << 10;

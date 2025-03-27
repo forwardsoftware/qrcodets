@@ -1,6 +1,6 @@
 import { HTMLDrawer, SVGDrawer } from "./drawers";
 import { QRErrorCorrectLevel } from "./enums";
-import { QRCodeModel } from "./models";
+import { QRCodeModelImpl } from "./models";
 import type { QRCodeDrawer, QRCodeOptions } from "./types";
 
 /**
@@ -70,7 +70,7 @@ export class QRCode {
    * @param {String} sText link data
    */
   makeCode(sText: string): void {
-    const qrCodeModel = new QRCodeModel(this.getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
+    const qrCodeModel = new QRCodeModelImpl(this.getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
     qrCodeModel.addData(sText);
     qrCodeModel.make();
     if (this._el) {
