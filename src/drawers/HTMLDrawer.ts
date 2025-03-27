@@ -1,7 +1,5 @@
-import type { QRCodeOptions } from "../interface";
 import type { QRCodeModel } from "../models";
-
-import type { QRCodeDrawer } from "./types";
+import type { QRCodeDrawer, QRCodeOptions } from "../types";
 
 export class HTMLDrawer implements QRCodeDrawer {
   // this Image contains 1px data

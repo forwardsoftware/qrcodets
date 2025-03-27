@@ -1,8 +1,7 @@
 import { HTMLDrawer, SVGDrawer } from "./drawers";
-import type { QRCodeDrawer } from "./drawers";
 import { QRErrorCorrectLevel } from "./enums";
-import type { QRCodeOptions } from "./interface";
 import { QRCodeModel } from "./models";
+import type { QRCodeDrawer, QRCodeOptions } from "./types";
 
 /**
  * @class QRCode

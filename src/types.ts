@@ -1,4 +1,5 @@
 import type { QRErrorCorrectLevel } from "./enums";
+import type { QRCodeModel } from "./models";
 
 export interface QRCodeOptions {
   id?: string;
@@ -20,4 +21,10 @@ export interface QRCodeOptions {
   text?: string;
 
   mode?: "svg" | "dom";
+}
+
+export interface QRCodeDrawer {
+  draw: (qrCodeModel: QRCodeModel) => void;
+
+  clear: () => void;
 }
