@@ -1,7 +1,7 @@
 import type { QRCodeModel } from "../types";
 
-import { createQR8bitByte, getLengthInBits, writeQR8bitByte, type QR8bitByte } from "./QR8bitByte";
-import { QRBitBuffer } from "./QRBitBuffer";
+import { createQR8bitByte, type QR8bitByte } from "./QR8bitByte";
+import { createQRBitBuffer, getQRBitBufferBit, padQRBitBuffer, validateQRBitBufferSize, type QRBitBuffer } from "./QRBitBuffer";
 import { QRPolynomial } from "./QRPolynomial";
 import { getRSBlocks, type RSBlock } from "./QRRSBlock";
 import { getBCHTypeInfo, getBCHTypeNumber, getErrorCorrectPolynomial, getLostPoint, getMask, getPatternPosition } from "./utils";
@@ -16,9 +16,6 @@ export class QRCodeModelImpl implements QRCodeModel {
   private dataList: Array<QR8bitByte>;
   private dataCache?: number[];
 
-  private static readonly PAD0 = 0xec;
-  private static readonly PAD1 = 0x11;
-
   constructor(typeNumber: number, errorCorrectLevel: number) {
     this.typeNumber = typeNumber;
     this.errorCorrectLevel = errorCorrectLevel;
@@ -30,49 +27,22 @@ export class QRCodeModelImpl implements QRCodeModel {
 
   static createData(typeNumber: number, errorCorrectLevel: number, dataList: QR8bitByte[]) {
     const rsBlocks = getRSBlocks(typeNumber, errorCorrectLevel);
-    const buffer = this.createDataBuffer(typeNumber, dataList);
     const totalDataCount = this.calculateTotalDataCount(rsBlocks);
 
-    this.validateBufferSize(buffer, totalDataCount);
-    this.padBuffer(buffer, totalDataCount);
+    let buffer = createQRBitBuffer(typeNumber, dataList);
+
+    if (!validateQRBitBufferSize(buffer, totalDataCount)) {
+      throw new Error(`code length overflow. (${buffer.length})`);
+    }
+
+    buffer = padQRBitBuffer(buffer, totalDataCount);
 
     return this.createBytes(buffer, rsBlocks);
   }
 
-  private static createDataBuffer(typeNumber: number, dataList: QR8bitByte[]): QRBitBuffer {
-    const buffer = new QRBitBuffer();
-    dataList.forEach((data) => {
-      buffer.put(data.mode, 4);
-      buffer.put(data.length, getLengthInBits(data, typeNumber));
-      writeQR8bitByte(data, buffer);
-    });
-    return buffer;
-  }
-
+  // TODO: extract to RSBlock utils
   private static calculateTotalDataCount(rsBlocks: RSBlock[]): number {
     return rsBlocks.reduce((sum, block) => sum + block.dataCount, 0);
-  }
-
-  private static validateBufferSize(buffer: QRBitBuffer, totalDataCount: number): void {
-    if (buffer.getLengthInBits() > totalDataCount * 8) {
-      throw new Error(`code length overflow. (${buffer.getLengthInBits()} > ${totalDataCount * 8})`);
-    }
-  }
-
-  private static padBuffer(buffer: QRBitBuffer, totalDataCount: number): void {
-    if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
-      buffer.put(0, 4);
-    }
-
-    while (buffer.getLengthInBits() % 8 !== 0) {
-      buffer.putBit(false);
-    }
-
-    while (buffer.getLengthInBits() < totalDataCount * 8) {
-      buffer.put(this.PAD0, 8);
-      if (buffer.getLengthInBits() >= totalDataCount * 8) break;
-      buffer.put(this.PAD1, 8);
-    }
   }
 
   static createBytes(buffer: QRBitBuffer, rsBlocks: RSBlock[]): number[] {
@@ -115,7 +85,7 @@ export class QRCodeModelImpl implements QRCodeModel {
   }
 
   private static extractData(buffer: QRBitBuffer, offset: number, count: number): number[] {
-    return Array.from({ length: count }, (_, i) => 0xff & buffer.getBit(i + offset));
+    return Array.from({ length: count }, (_, i) => 0xff & getQRBitBufferBit(buffer, i + offset));
   }
 
   private static generateErrorCorrection(data: number[], ecCount: number): number[] {

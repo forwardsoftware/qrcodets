@@ -39,17 +39,6 @@ export function createQR8bitByte(data: string): QR8bitByte {
 }
 
 /**
- * Writes the QR8bitByte to the provided QRBitBuffer.
- * Each byte is written as 8 bits to the buffer.
- *
- * @param qr8bitByte - The QR8bitByte to write
- * @param outBuffer - The QRBitBuffer to write the data to
- */
-export function writeQR8bitByte(qr8bitByte: QR8bitByte, outBuffer: QRBitBuffer): void {
-  qr8bitByte.data.forEach((byte) => outBuffer.put(byte, 8));
-}
-
-/**
  * Calculates the length of the QR8bitByte data in bits based on the QR mode and type number.
  *
  * @param qr8bitByte - The QR8bitByte object containing the data and mode information.
