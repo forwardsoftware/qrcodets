@@ -16,14 +16,64 @@ npm i @forward-software/qrcodets
 
 ### Basic Usage
 
-TBD
+You can import and use QRCodeTS in your project as follows:
+
+```javascript
+import { QRCode, HTMLDrawer, SVGDrawer } from "@forward-software/qrcodets";
+
+// To render using HTML API (DOM or Canvas)
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+})
+  .renderTo(new HTMLDrawer(document.getElementById("qrcode")))
+  .draw();
+
+
+// To render using SVG
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+})
+  .renderTo(new SVGDrawer(document.getElementById("qrcode")))
+  .draw();
+
+```
+
+#### Options
+
+| Name              | Type                                                      | Description                                                                                                                                                                                            | Default     |
+| ----------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| `size`            | Number                                                    | The physical size of the QR Code in pixels.                                                                                                                                                            | `256`       |
+| `colorDark`       | String                                                    | The color of the dark modules (QR Code pixels).<br/>Accepts any valid CSS color string.                                                                                                                | `"#000000"` |
+| `colorLight`      | String                                                    | The color of the light modules (background).<br/>Accepts any valid CSS color string.                                                                                                                   | `"#ffffff"` |
+| `type`            | Number                                                    | The QR Code version/type number (1-40).<br/><br/>Higher values increase the size and data capacity of the QR Code.<br/><br/>**NOTE:** If not set, the library will try to compute it based on content size. | `undefined` |
+| `correctionLevel` | [QRCodeErrorCorrectionLevel](#qrcodeerrorcorrectionlevel) | The error correction level of the QR Code.                                                                                                                                                             | `"H"`       |
+
+
+##### QRCodeErrorCorrectionLevel
+
+The error correction level of a QR Code
+
+| Value | Description                       |
+| ----- | --------------------------------- |
+| `"L"` | (Low): ~7% error correction       |
+| `"M"` | (Medium): ~15% error correction   |
+| `"Q"` | (Quartile): ~25% error correction |
+| `"H"` | (High): ~30% error correction     |
 
 ### Coming from `QRCodeTS`?
 
 You can replace `QRCodeTS` and keep using it as before by importing and using the `QRCodeCompat` compatibility class in your project as follows:
 
 ```javascript
-import { QRCodeCompat as QRCode } from "@forward-software/qrcodets";
+import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "@forward-software/qrcodets";
 
 const params = {
   id: "qrcode",
@@ -41,7 +91,7 @@ const params = {
 const qrCode = new QRCode(params);
 ```
 
-## Initialization Parameters
+#### Initialization Parameters
 
 The QRCode class takes an object with the following properties as initialization parameters:
 
