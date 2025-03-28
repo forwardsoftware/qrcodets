@@ -3,31 +3,8 @@ import { QRErrorCorrectLevel } from "./enums";
 import { QRCodeModelImpl } from "./models";
 import type { QRCodeDrawer, QRCodeOptions } from "./types";
 
-/**
- * @class QRCode
- * @constructor
- * @example
- * new QRCode(document.getElementById("test"), "http://jindo.dev.naver.com/collie");
- *
- * @example
- * var oQRCode = new QRCode("test", {
- *    text : "http://naver.com",
- *    width : 128,
- *    height : 128
- * });
- *
- * oQRCode.clear(); // Clear the QRCode.
- * oQRCode.makeCode("http://map.naver.com"); // Re-create the QRCode.
- *
- * @param {Object} vOption
- * @param {String} vOption.text QRCode link data
- * @param {Number} [vOption.width=256]
- * @param {Number} [vOption.height=256]
- * @param {String} [vOption.colorDark="#000000"]
- * @param {String} [vOption.colorLight="#ffffff"]
- * @param {QRCode.CorrectLevel} [vOption.correctLevel=QRCode.CorrectLevel.H] [L|M|Q|H]
- */
-export class QRCode {
+
+export class QRCodeCompat {
   private _htOption: QRCodeOptions;
   private _el?: HTMLElement | null;
   private _oDrawing?: QRCodeDrawer;
@@ -70,6 +47,7 @@ export class QRCode {
    * @param {String} sText link data
    */
   makeCode(sText: string): void {
+    // TODO: evaluate moving all logic to a single function call to avoid the `QRCodeModel` class
     const qrCodeModel = new QRCodeModelImpl(this.getTypeNumber(sText, this._htOption.correctLevel), this._htOption.correctLevel!);
     qrCodeModel.addData(sText);
     qrCodeModel.make();
