@@ -129,12 +129,7 @@ export class QRCodeModelImpl implements QRCodeModel {
 
   private static generateErrorCorrection(data: number[], ecCount: number): number[] {
     const rsPoly = getErrorCorrectPolynomial(ecCount);
-    const rawPoly = new QRPolynomial(data, rsPoly.getLength() - 1);
-    const modPoly = rawPoly.mod(rsPoly);
-
-    if (!modPoly) {
-      return Array(rsPoly.getLength() - 1).fill(0);
-    }
+    const modPoly = new QRPolynomial(data, rsPoly.getLength() - 1).mod(rsPoly);
 
     return Array.from({ length: rsPoly.getLength() - 1 }, (_, i) => {
       const modIndex = i + modPoly.getLength() - (rsPoly.getLength() - 1);

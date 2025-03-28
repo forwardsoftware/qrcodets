@@ -2,9 +2,9 @@ import { galoisFieldExp, galoisFieldLog } from "./QRMath";
 
 
 export class QRPolynomial {
-    private num: number[];
+    private num: Array<number>;
 
-    constructor(num: number[], shift: number) {
+    constructor(num: Array<number>, shift: number) {
         if (num.length === undefined) {
             throw new Error(num.length + "/" + shift);
         }
@@ -36,7 +36,7 @@ export class QRPolynomial {
         return new QRPolynomial(num, 0);
     }
 
-    mod(e: QRPolynomial): QRPolynomial | null {
+    mod(e: QRPolynomial): QRPolynomial {
         if (this.getLength() - e.getLength() < 0) {
             return this;
         }
