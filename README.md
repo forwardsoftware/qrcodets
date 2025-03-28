@@ -14,8 +14,6 @@ npm i @forward-software/qrcodets
 
 ## Usage
 
-### Basic Usage
-
 You can import and use QRCodeTS in your project as follows:
 
 ```javascript
@@ -46,7 +44,7 @@ new QRCode("https://example.com", {
 
 ```
 
-#### Options
+### Options
 
 | Name              | Type                                                      | Description                                                                                                                                                                                                 | Default     |
 | ----------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -57,7 +55,7 @@ new QRCode("https://example.com", {
 | `correctionLevel` | [QRCodeErrorCorrectionLevel](#qrcodeerrorcorrectionlevel) | The error correction level of the QR Code.                                                                                                                                                                  | `"H"`       |
 
 
-##### QRCodeErrorCorrectionLevel
+#### QRCodeErrorCorrectionLevel
 
 The error correction level of a QR Code
 
@@ -67,6 +65,8 @@ The error correction level of a QR Code
 | `"M"` | (Medium): ~15% error correction   |
 | `"Q"` | (Quartile): ~25% error correction |
 | `"H"` | (High): ~30% error correction     |
+
+
 
 ## Migrating from QRCodeTS by lilRedaka?
 
