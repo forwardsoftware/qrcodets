@@ -115,7 +115,7 @@ export class QRCodeModelImpl implements QRCodeModel {
   }
 
   private static extractData(buffer: QRBitBuffer, offset: number, count: number): number[] {
-    return Array.from({ length: count }, (_, i) => 0xff & buffer.buffer[i + offset]);
+    return Array.from({ length: count }, (_, i) => 0xff & buffer.getBit(i + offset));
   }
 
   private static generateErrorCorrection(data: number[], ecCount: number): number[] {
