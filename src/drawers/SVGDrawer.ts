@@ -11,15 +11,13 @@ export class SVGDrawer implements QRCodeDrawer {
     const _el = this._el;
 
     const nCount = model.getModuleCount();
-    // const nWidth = Math.floor(options.size / nCount);
-    // const nHeight = Math.floor(options.size / nCount);
 
     this.clear();
 
     const svg = this.makeSVG("svg", {
       viewBox: "0 0 " + String(nCount) + " " + String(nCount),
-      width: "100%",
-      height: "100%",
+      width: `${options.size}px`,
+      height: `${options.size}px`,
       fill: options.colorLight,
     });
     svg.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
