@@ -1,4 +1,4 @@
-import { QRCode, QRErrorCorrectLevel } from "../../dist";
+import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "../../dist";
 
 import "./style.css";
 
