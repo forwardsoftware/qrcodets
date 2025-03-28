@@ -3,7 +3,8 @@ import type { QRCodeModel } from "../types";
 import { QR8bitByte } from "./QR8bitByte";
 import { QRBitBuffer } from "./QRBitBuffer";
 import { QRPolynomial } from "./QRPolynomial";
-import { QRRSBlock } from "./QRRSBlock";
+import { getRSBlocks } from "./QRRSBlock";
+import type { RSBlock } from "./QRRSBlock";
 import {
   getBCHTypeInfo,
   getBCHTypeNumber,
@@ -35,7 +36,7 @@ export class QRCodeModelImpl implements QRCodeModel {
   }
 
   static createData(typeNumber: number, errorCorrectLevel: number, dataList: QR8bitByte[]) {
-    var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+    var rsBlocks = getRSBlocks(typeNumber, errorCorrectLevel);
     var buffer = new QRBitBuffer();
     for (var i = 0; i < dataList.length; i++) {
       var data = dataList[i];
@@ -69,7 +70,7 @@ export class QRCodeModelImpl implements QRCodeModel {
     return QRCodeModelImpl.createBytes(buffer, rsBlocks);
   }
 
-  static createBytes = function (buffer: QRBitBuffer, rsBlocks: QRRSBlock[]) {
+  static createBytes = function (buffer: QRBitBuffer, rsBlocks: Array<RSBlock>) {
     var offset = 0;
     var maxDcCount = 0;
     var maxEcCount = 0;
