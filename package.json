@@ -14,7 +14,7 @@
   "bugs": "https://github.com/forwardsoftware/qrcodets/issues",
   "scripts": {
     "start": "vite serve website --host",
-    "build": "tsc",
+    "build": "tsc --removeComments && tsc --declaration --emitDeclarationOnly",
     "clean": "rimraf dist"
   },
   "main": "dist/index.js",

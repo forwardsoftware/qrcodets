@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "declaration": true,
+        "declaration": false,
         "target": "ES6",
         "moduleResolution": "node",
         "strict": true,
@@ -8,6 +8,7 @@
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
+        "removeComments": false,
         "outDir": "./dist",
         "rootDir": "./src",
     },
