@@ -1,4 +1,5 @@
-import { QRMath } from "./QRMath";
+import { galoisFieldExp, galoisFieldLog } from "./QRMath";
+
 
 export class QRPolynomial {
     private num: number[];
@@ -29,7 +30,7 @@ export class QRPolynomial {
         const num = new Array(this.getLength() + e.getLength() - 1);
         for (let i = 0; i < this.getLength(); i++) {
             for (let j = 0; j < e.getLength(); j++) {
-                num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
+                num[i + j] ^= galoisFieldExp(galoisFieldLog(this.get(i)) + galoisFieldLog(e.get(j)));
             }
         }
         return new QRPolynomial(num, 0);
@@ -39,13 +40,13 @@ export class QRPolynomial {
         if (this.getLength() - e.getLength() < 0) {
             return this;
         }
-        const ratio = QRMath.glog(this.get(0)) - QRMath.glog(e.get(0));
+        const ratio = galoisFieldLog(this.get(0)) - galoisFieldLog(e.get(0));
         const num = new Array(this.getLength());
         for (let i = 0; i < this.getLength(); i++) {
             num[i] = this.get(i);
         }
         for (let i = 0; i < e.getLength(); i++) {
-            num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
+            num[i] ^= galoisFieldExp(galoisFieldLog(e.get(i)) + ratio);
         }
         return new QRPolynomial(num, 0).mod(e);
     }

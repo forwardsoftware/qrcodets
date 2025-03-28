@@ -1,7 +1,7 @@
 import type { QRCodeModel } from "../types";
 
 import { G15, G15_MASK, G18, PATTERN_POSITION_TABLE, QRMaskPattern, QRMode } from "./constants";
-import { QRMath } from "./QRMath";
+import { galoisFieldExp } from "./QRMath";
 import { QRPolynomial } from "./QRPolynomial";
 
 export function getBCHTypeInfo(data: number): number {
@@ -58,7 +58,7 @@ export function getMask(maskPattern: number, i: number, j: number): boolean {
 export function getErrorCorrectPolynomial(errorCorrectLength: number): QRPolynomial {
     let a = new QRPolynomial([1], 0);
     for (let i = 0; i < errorCorrectLength; i++) {
-        a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
+        a = a.multiply(new QRPolynomial([1, galoisFieldExp(i)], 0));
     }
     return a;
 }
