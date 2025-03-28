@@ -20,6 +20,21 @@ export function getQRErrorCorrectLevel(errorCorrectionLevel: QRCodeErrorCorrecti
   }
 }
 
+export function getQRCodeErrorCorrectionLevel(errorCorrectLevel: QRErrorCorrectLevel): QRCodeErrorCorrectionLevel {
+  switch (errorCorrectLevel) {
+    case QRErrorCorrectLevel.L:
+      return "L";
+    case QRErrorCorrectLevel.M:
+      return "M";
+    case QRErrorCorrectLevel.Q:
+      return "Q";
+    case QRErrorCorrectLevel.H:
+      return "H";
+    default:
+      return "H";
+  }
+}
+
 /**
  * Get the QR Code version/type number (1-40) based on text length
  *
