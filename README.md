@@ -14,10 +14,16 @@ npm i @forward-software/qrcodets
 
 ## Usage
 
-You can import and use QRCodeTS in your project as follows:
+### Basic Usage
+
+TBD
+
+### Coming from `QRCodeTS`?
+
+You can replace `QRCodeTS` and keep using it as before by importing and using the `QRCodeCompat` compatibility class in your project as follows:
 
 ```javascript
-import { QRCode } from "@forward-software/qrcodets";
+import { QRCodeCompat as QRCode } from "@forward-software/qrcodets";
 
 const params = {
   id: "qrcode",
