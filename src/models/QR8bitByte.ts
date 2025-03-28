@@ -1,50 +1,107 @@
 import { QRMode } from "./constants";
-import { QRBitBuffer } from "./QRBitBuffer";
+import type { QRBitBuffer } from "./QRBitBuffer";
+import { encodeUTF8 } from "./utils";
 
-export class QR8bitByte {
-    mode: number = QRMode.MODE_8BIT_BYTE;;
-    data: string;
-    parsedData: number[];
-    constructor(data: string) {
-        this.data = data
-        this.parsedData = []
-        for (var i = 0, l = this.data.length; i < l; i++) {
-            var byteArray: number[] = [];
-            var code = this.data.charCodeAt(i);
+/**
+ * Represents the data structure for 8-bit byte QR code data.
+ * Contains the parsed data array that will be encoded into the QR code.
+ */
+export interface QR8bitByte {
+  /** The parsed and encoded data array */
+  readonly data: number[];
 
-            if (code > 0x10000) {
-                byteArray[0] = 0xF0 | ((code & 0x1C0000) >>> 18);
-                byteArray[1] = 0x80 | ((code & 0x3F000) >>> 12);
-                byteArray[2] = 0x80 | ((code & 0xFC0) >>> 6);
-                byteArray[3] = 0x80 | (code & 0x3F);
-            } else if (code > 0x800) {
-                byteArray[0] = 0xE0 | ((code & 0xF000) >>> 12);
-                byteArray[1] = 0x80 | ((code & 0xFC0) >>> 6);
-                byteArray[2] = 0x80 | (code & 0x3F);
-            } else if (code > 0x80) {
-                byteArray[0] = 0xC0 | ((code & 0x7C0) >>> 6);
-                byteArray[1] = 0x80 | (code & 0x3F);
-            } else {
-                byteArray[0] = code;
-            }
+  /**
+   * The length of the data array.
+   */
+  readonly length: number;
 
-            this.parsedData.push(...byteArray);
-        }
+  /**
+   * The QR mode used for encoding the data.
+   */
+  readonly mode: QRMode;
+}
 
-        this.parsedData = Array.prototype.concat.apply([], this.parsedData);
+/**
+ * Creates a new QR8bitByte object from a string input.
+ * The input string is encoded into UTF-8 bytes.
+ *
+ * @param data - The string data to be encoded
+ * @returns A QR8bitByte object containing the encoded data
+ */
+export function createQR8bitByte(data: string): QR8bitByte {
+  const encodedData = encodeUTF8(data);
 
-        if (this.parsedData.length != this.data.length) {
-            this.parsedData.unshift(191);
-            this.parsedData.unshift(187);
-            this.parsedData.unshift(239);
-        }
+  return {
+    data: encodedData,
+    length: encodedData.length,
+    mode: QRMode.MODE_8BIT_BYTE,
+  };
+}
+
+/**
+ * Writes the QR8bitByte to the provided QRBitBuffer.
+ * Each byte is written as 8 bits to the buffer.
+ *
+ * @param qr8bitByte - The QR8bitByte to write
+ * @param outBuffer - The QRBitBuffer to write the data to
+ */
+export function writeQR8bitByte(qr8bitByte: QR8bitByte, outBuffer: QRBitBuffer): void {
+  qr8bitByte.data.forEach((byte) => outBuffer.put(byte, 8));
+}
+
+/**
+ * Calculates the length of the QR8bitByte data in bits based on the QR mode and type number.
+ *
+ * @param qr8bitByte - The QR8bitByte object containing the data and mode information.
+ * @param type - The type number of the QR code.
+ * @returns The length of the QR8bitByte data in bits.
+ * @throws Error if the type number is invalid or the QR mode is not recognized.
+ */
+export function getLengthInBits(qr8bitByte: QR8bitByte, type: number): number {
+  if (type > 40) {
+    throw new Error(`type: ${type}`);
+  }
+
+  if (1 <= type && type < 10) {
+    switch (qr8bitByte.mode) {
+      case QRMode.MODE_NUMBER:
+        return 10;
+      case QRMode.MODE_ALPHA_NUM:
+        return 9;
+      case QRMode.MODE_8BIT_BYTE:
+        return 8;
+      case QRMode.MODE_KANJI:
+        return 8;
+      default:
+        throw new Error(`mode: ${qr8bitByte.mode}`);
     }
-    getLength() {
-        return this.parsedData.length;
+  }
+
+  if (type < 27) {
+    switch (qr8bitByte.mode) {
+      case QRMode.MODE_NUMBER:
+        return 12;
+      case QRMode.MODE_ALPHA_NUM:
+        return 11;
+      case QRMode.MODE_8BIT_BYTE:
+        return 16;
+      case QRMode.MODE_KANJI:
+        return 10;
+      default:
+        throw new Error(`mode: ${qr8bitByte.mode}`);
     }
-    write(buffer: QRBitBuffer) {
-        for (var i = 0, l = this.parsedData.length; i < l; i++) {
-            buffer.put(this.parsedData[i], 8);
-        }
-    }
+  }
+
+  switch (qr8bitByte.mode) {
+    case QRMode.MODE_NUMBER:
+      return 14;
+    case QRMode.MODE_ALPHA_NUM:
+      return 13;
+    case QRMode.MODE_8BIT_BYTE:
+      return 16;
+    case QRMode.MODE_KANJI:
+      return 12;
+    default:
+      throw new Error(`mode: ${qr8bitByte.mode}`);
+  }
 }

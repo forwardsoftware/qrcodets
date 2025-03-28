@@ -1,19 +1,10 @@
 import type { QRCodeModel } from "../types";
 
-import { QR8bitByte } from "./QR8bitByte";
+import { createQR8bitByte, getLengthInBits, writeQR8bitByte, type QR8bitByte } from "./QR8bitByte";
 import { QRBitBuffer } from "./QRBitBuffer";
 import { QRPolynomial } from "./QRPolynomial";
-import { getRSBlocks } from "./QRRSBlock";
-import type { RSBlock } from "./QRRSBlock";
-import {
-  getBCHTypeInfo,
-  getBCHTypeNumber,
-  getErrorCorrectPolynomial,
-  getLengthInBits,
-  getLostPoint,
-  getMask,
-  getPatternPosition,
-} from "./utils";
+import { getRSBlocks, type RSBlock } from "./QRRSBlock";
+import { getBCHTypeInfo, getBCHTypeNumber, getErrorCorrectPolynomial, getLostPoint, getMask, getPatternPosition } from "./utils";
 
 export class QRCodeModelImpl implements QRCodeModel {
   private typeNumber: number;
@@ -22,7 +13,7 @@ export class QRCodeModelImpl implements QRCodeModel {
   private modules: (boolean | null)[][];
   private moduleCount: number;
 
-  private dataList: QR8bitByte[];
+  private dataList: Array<QR8bitByte>;
   private dataCache?: number[];
 
   private static readonly PAD0 = 0xec;
@@ -52,8 +43,8 @@ export class QRCodeModelImpl implements QRCodeModel {
     const buffer = new QRBitBuffer();
     dataList.forEach((data) => {
       buffer.put(data.mode, 4);
-      buffer.put(data.getLength(), getLengthInBits(data.mode, typeNumber));
-      data.write(buffer);
+      buffer.put(data.length, getLengthInBits(data, typeNumber));
+      writeQR8bitByte(data, buffer);
     });
     return buffer;
   }
@@ -170,7 +161,7 @@ export class QRCodeModelImpl implements QRCodeModel {
   }
 
   addData(data: string): void {
-    this.dataList.push(new QR8bitByte(data));
+    this.dataList.push(createQR8bitByte(data));
     this.dataCache = undefined;
   }
 

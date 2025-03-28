@@ -63,51 +63,6 @@ export function getErrorCorrectPolynomial(errorCorrectLength: number): QRPolynom
     return a;
 }
 
-export function getLengthInBits(mode: number, type: number): number {
-    if (1 <= type && type < 10) {
-        switch (mode) {
-            case QRMode.MODE_NUMBER:
-                return 10;
-            case QRMode.MODE_ALPHA_NUM:
-                return 9;
-            case QRMode.MODE_8BIT_BYTE:
-                return 8;
-            case QRMode.MODE_KANJI:
-                return 8;
-            default:
-                throw new Error(`mode: ${mode}`);
-        }
-    } else if (type < 27) {
-        switch (mode) {
-            case QRMode.MODE_NUMBER:
-                return 12;
-            case QRMode.MODE_ALPHA_NUM:
-                return 11;
-            case QRMode.MODE_8BIT_BYTE:
-                return 16;
-            case QRMode.MODE_KANJI:
-                return 10;
-            default:
-                throw new Error(`mode: ${mode}`);
-        }
-    } else if (type < 41) {
-        switch (mode) {
-            case QRMode.MODE_NUMBER:
-                return 14;
-            case QRMode.MODE_ALPHA_NUM:
-                return 13;
-            case QRMode.MODE_8BIT_BYTE:
-                return 16;
-            case QRMode.MODE_KANJI:
-                return 12;
-            default:
-                throw new Error(`mode: ${mode}`);
-        }
-    } else {
-        throw new Error(`type: ${type}`);
-    }
-}
-
 export function getLostPoint(qrCode: QRCodeModel): number {
     const moduleCount = qrCode.getModuleCount();
     let lostPoint = 0;
@@ -179,4 +134,49 @@ export function getLostPoint(qrCode: QRCodeModel): number {
     const ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
     lostPoint += ratio * 10;
     return lostPoint;
+}
+
+export function encodeUTF8(str: string): number[] {
+    const bytes: number[] = [];
+    
+    for (let i = 0; i < str.length; i++) {
+        const code = str.charCodeAt(i);
+        const byteArray = getUTF8Bytes(code);
+        bytes.push(...byteArray);
+    }
+
+    // Add UTF-8 BOM if the encoded length differs from input length
+    if (bytes.length !== str.length) {
+        bytes.unshift(0xEF, 0xBB, 0xBF);
+    }
+
+    return bytes;
+}
+
+function getUTF8Bytes(code: number): number[] {
+    if (code > 0x10000) {
+        return [
+            0xF0 | ((code & 0x1C0000) >>> 18),
+            0x80 | ((code & 0x3F000) >>> 12),
+            0x80 | ((code & 0xFC0) >>> 6),
+            0x80 | (code & 0x3F)
+        ];
+    }
+    
+    if (code > 0x800) {
+        return [
+            0xE0 | ((code & 0xF000) >>> 12),
+            0x80 | ((code & 0xFC0) >>> 6),
+            0x80 | (code & 0x3F)
+        ];
+    }
+    
+    if (code > 0x80) {
+        return [
+            0xC0 | ((code & 0x7C0) >>> 6),
+            0x80 | (code & 0x3F)
+        ];
+    }
+    
+    return [code];
 }
