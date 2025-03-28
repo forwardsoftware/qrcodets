@@ -1,4 +1,4 @@
-import type { QRCodeCompatOptions, QRCodeDrawer, QRCodeModel } from "../types";
+import type { QRCodeDrawer, QRCodeDrawerOptions, QRCodeModel } from "../types";
 
 export class HTMLDrawer implements QRCodeDrawer {
   // this Image contains 1px data
@@ -13,47 +13,27 @@ export class HTMLDrawer implements QRCodeDrawer {
 
   private imageElement: HTMLImageElement | null = null;
 
-  private qrCodeOptions: QRCodeCompatOptions;
-
   private isDataURISupported: boolean | null = null;
 
-  constructor(element: HTMLElement, qrCodeOptions: QRCodeCompatOptions) {
+  constructor(element: HTMLElement) {
     this.element = element;
-    this.qrCodeOptions = qrCodeOptions;
-
-    if (this.isCanvasSupported()) {
-      this.canvasElement = document.createElement("canvas");
-      this.canvasElement.width = this.qrCodeOptions.width ?? 0;
-      this.canvasElement.height = this.qrCodeOptions.height ?? 0;
-
-      this.element.appendChild(this.canvasElement);
-
-      this.canvasContext = this.canvasElement.getContext("2d")!;
-
-      this.imageElement = document.createElement("img");
-      this.imageElement.alt = "Scan me!";
-      this.imageElement.style.display = "none";
-      this.element.appendChild(this.imageElement);
-    }
   }
 
   /**
    * Draw the QR Code
-   *
-   * @param qrCodeModel
    */
-  public draw(qrCodeModel: QRCodeModel): void {
+  public draw(model: QRCodeModel, options: QRCodeDrawerOptions): boolean {
     if (!this.isCanvasSupported()) {
-      return this.drawWithDOMElements(qrCodeModel);
+      return this.drawWithDOMElements(model, options);
     }
 
-    return this.drawWithCanvas(qrCodeModel);
+    return this.drawWithCanvas(model, options);
   }
 
   /**
    * Clear the QRCode
    */
-  public clear(): void {
+  public clear(): boolean {
     if (!this.isCanvasSupported()) {
       return this.clearDOMElements();
     }
@@ -63,23 +43,33 @@ export class HTMLDrawer implements QRCodeDrawer {
 
   /**
    * Draw the QR Code using HTML Canvas API
-   *
-   * @param qrCodeModel
    */
-  private drawWithCanvas(qrCodeModel: QRCodeModel): void {
-    if (!this.imageElement || !this.canvasContext) {
-      console.warn("[HTMLDrawer][drawWithCanvas] Canvas context has not been initialized properly");
-      return;
+  private drawWithCanvas(model: QRCodeModel, options: QRCodeDrawerOptions): boolean {
+    if (!this.canvasElement) {
+      this.canvasElement = document.createElement("canvas");
+      this.canvasElement.width = options.size ?? 0;
+      this.canvasElement.height = options.size ?? 0;
+
+      this.element.appendChild(this.canvasElement);
     }
 
-    const _htOption = this.qrCodeOptions;
+    if (!this.canvasContext) {
+      this.canvasContext = this.canvasElement.getContext("2d")!;
+    }
+
+    if (!this.imageElement) {
+      this.imageElement = document.createElement("img");
+      this.imageElement.alt = "Scan me!"; // TODO: use QRCode content as alt text
+      this.imageElement.style.display = "none";
+      this.element.appendChild(this.imageElement);
+    }
 
     const _elImage = this.imageElement;
     const _oContext = this.canvasContext;
 
-    const nCount = qrCodeModel.getModuleCount();
-    const nWidth = (_htOption.width ?? 0) / nCount;
-    const nHeight = (_htOption.height ?? 0) / nCount;
+    const nCount = model.getModuleCount();
+    const nWidth = (options.size ?? 0) / nCount;
+    const nHeight = (options.size ?? 0) / nCount;
     const nRoundedWidth = Math.round(nWidth);
     const nRoundedHeight = Math.round(nHeight);
 
@@ -88,12 +78,12 @@ export class HTMLDrawer implements QRCodeDrawer {
 
     for (let row = 0; row < nCount; row++) {
       for (let col = 0; col < nCount; col++) {
-        const bIsDark = qrCodeModel.isDark(row, col);
+        const bIsDark = model.isDark(row, col);
         const nLeft = col * nWidth;
         const nTop = row * nHeight;
-        _oContext.strokeStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
+        _oContext.strokeStyle = bIsDark ? options.colorDark : options.colorLight;
         _oContext.lineWidth = 1;
-        _oContext.fillStyle = bIsDark ? _htOption.colorDark : _htOption.colorLight;
+        _oContext.fillStyle = bIsDark ? options.colorDark : options.colorLight;
         _oContext.fillRect(nLeft, nTop, nWidth, nHeight);
 
         // Anti-aliasing prevention
@@ -112,6 +102,8 @@ export class HTMLDrawer implements QRCodeDrawer {
     if (!isAndroid || androidVersion >= 3) {
       this._safeSetDataURI(this._onMakeImage.bind(this), () => {});
     }
+
+    return true;
   }
 
   private getAndroidPlatformDetails(): [boolean, number] {
@@ -178,13 +170,12 @@ export class HTMLDrawer implements QRCodeDrawer {
    *
    * @param qrCodeModel
    */
-  private drawWithDOMElements(qrCodeModel: QRCodeModel): void {
-    const _htOption = this.qrCodeOptions;
+  private drawWithDOMElements(model: QRCodeModel, options: QRCodeDrawerOptions): boolean {
     const _el = this.element;
 
-    const nCount = qrCodeModel.getModuleCount();
-    const nWidth = _htOption.width ? Math.floor(_htOption.width / nCount) : 0;
-    const nHeight = _htOption.height ? Math.floor(_htOption.height / nCount) : 0;
+    const nCount = model.getModuleCount();
+    const nWidth = Math.floor(options.size / nCount);
+    const nHeight = Math.floor(options.size / nCount);
 
     const aHTML: string[] = ['<table style="border:0;border-collapse:collapse;">'];
 
@@ -198,7 +189,7 @@ export class HTMLDrawer implements QRCodeDrawer {
             "px;height:" +
             nHeight +
             "px;background-color:" +
-            (qrCodeModel.isDark(row, col) ? _htOption.colorDark : _htOption.colorLight) +
+            (model.isDark(row, col) ? options.colorDark : options.colorLight) +
             ';"></td>'
         );
       }
@@ -207,35 +198,42 @@ export class HTMLDrawer implements QRCodeDrawer {
     }
 
     aHTML.push("</table>");
+
     _el.innerHTML = aHTML.join("");
 
     // Fix the margin values as real size.
     const elTable = _el.childNodes[0] as HTMLElement;
-    const nLeftMarginTable = _htOption.width ? (_htOption.width - elTable.offsetWidth) / 2 : 0;
-    const nTopMarginTable = _htOption.height ? (_htOption.height - elTable.offsetHeight) / 2 : 0;
+    const nLeftMarginTable = (options.size - elTable.offsetWidth) / 2;
+    const nTopMarginTable = (options.size - elTable.offsetHeight) / 2;
 
     if (nLeftMarginTable > 0 && nTopMarginTable > 0) {
       elTable.style.margin = nTopMarginTable + "px " + nLeftMarginTable + "px";
     }
+
+    return true;
   }
 
   /**
    * Clear Canvas
    */
-  private clearCanvas(): void {
+  private clearCanvas(): boolean {
     if (!this.canvasElement || !this.canvasContext) {
       console.warn("[HTMLDrawer][clearCanvas] Canvas context has not been initialized properly");
-      return;
+
+      return false;
     }
 
     this.canvasContext.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+
+    return true;
   }
 
   /**
    * Remove drawn QR Code HTML elements
    */
-  private clearDOMElements(): void {
+  private clearDOMElements(): boolean {
     this.element.innerHTML = "";
+    return true;
   }
 
   private isCanvasSupported(): boolean {
