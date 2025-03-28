@@ -9,19 +9,49 @@
 </head>
 
 <body>
-  <div id="app">
-    <div>
-      <p id="qrcode-svg"></p>
+  <table>
+    <tr>
+      <th>Mode</th>
+      <th>SVG</th>
+      <th>DOM</th>
+    </tr>
 
-      <p id="qrcode-dom"></p>
-    </div>
+    <tr>
+      <td>Basic</td>
 
-    <div>
-      <p id="qrcode-el-svg"></p>
+      <td>
+        <p id="qrcode-svg"></p>
+      </td>
 
-      <p id="qrcode-el-dom"></p>
-    </div>
-  </div>
+      <td>
+        <p id="qrcode-dom"></p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Compatibility (by ID)</td>
+
+      <td>
+        <p id="qrcode-compat-svg"></p>
+      </td>
+
+      <td>
+        <p id="qrcode-compat-dom"></p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Compatibility (by HTMLElement)</td>
+
+      <td>
+        <p id="qrcode-compat-el-svg"></p>
+      </td>
+
+      <td>
+        <p id="qrcode-compat-el-dom"></p>
+      </td>
+    </tr>
+  </table>
 
   <script type="module" src="/src/main.ts"></script>
 </body>

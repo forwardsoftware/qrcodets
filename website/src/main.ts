@@ -1,11 +1,32 @@
-import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "../../dist";
+import { HTMLDrawer, QRCode, QRCodeCompat, QRErrorCorrectLevel, SVGDrawer } from "../../dist";
 
 import "./style.css";
 
-// as SVG by ID
-new QRCode({
-  id: "qrcode-svg",
-  element: document.getElementById("qrcode-svg")!,
+// as SVG
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+})
+  .renderTo(new SVGDrawer(document.getElementById("qrcode-svg")!))
+  .draw();
+
+// as DOM
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+})
+  .renderTo(new HTMLDrawer(document.getElementById("qrcode-dom")!))
+  .draw();
+
+// as SVG by ID using Compatibility mode
+new QRCodeCompat({
+  id: "qrcode-compat-svg",
   width: 256,
   height: 256,
   typeNumber: 4,
@@ -17,8 +38,8 @@ new QRCode({
 });
 
 // as DOM by ID
-new QRCode({
-  id: "qrcode-dom",
+new QRCodeCompat({
+  id: "qrcode-compat-dom",
   width: 256,
   height: 256,
   typeNumber: 4,
@@ -30,27 +51,27 @@ new QRCode({
 });
 
 // as SVG by Element
-new QRCode({
-  element: document.getElementById("qrcode-el-svg")!,
+new QRCodeCompat({
+  element: document.getElementById("qrcode-compat-el-svg")!,
   width: 256,
   height: 256,
   typeNumber: 4,
   colorDark: "#000000",
   colorLight: "#ffffff",
-  correctLevel: QRErrorCorrectLevel.Q,
+  correctLevel: QRErrorCorrectLevel.H,
   text: "https://example.com",
   mode: "svg",
 });
 
 // as DOM by ID
-new QRCode({
-  element: document.getElementById("qrcode-el-dom")!,
+new QRCodeCompat({
+  element: document.getElementById("qrcode-compat-el-dom")!,
   width: 256,
   height: 256,
   typeNumber: 4,
   colorDark: "#000000",
   colorLight: "#ffffff",
-  correctLevel: QRErrorCorrectLevel.L,
+  correctLevel: QRErrorCorrectLevel.H,
   text: "https://example.com",
   mode: "dom",
 });
