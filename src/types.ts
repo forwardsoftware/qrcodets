@@ -1,5 +1,3 @@
-import type { QRErrorCorrectLevel } from "./enums";
-
 /**
  * The error correction level of a QR Code.
  * - L (Low): ~7% error correction
@@ -54,28 +52,6 @@ export interface QRCodeOptions {
    * @default "#ffffff"
    */
   colorLight: string;
-}
-
-export interface QRCodeCompatOptions {
-  id?: string;
-
-  element?: HTMLElement;
-
-  width: number;
-
-  height: number;
-
-  typeNumber: number;
-
-  colorDark: string;
-
-  colorLight: string;
-
-  correctLevel: QRErrorCorrectLevel;
-
-  text?: string;
-
-  mode?: "svg" | "dom";
 }
 
 export interface QRCodeModel {

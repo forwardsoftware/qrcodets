@@ -1,5 +1,3 @@
-import { QRErrorCorrectLevel } from "../enums";
-
 import { RS_BLOCK_TABLE } from "./constants";
 
 export class QRRSBlock {
@@ -10,7 +8,7 @@ export class QRRSBlock {
     }
 
     static RS_BLOCK_TABLE = RS_BLOCK_TABLE
-    static getRSBlocks(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel) {
+    static getRSBlocks(typeNumber: number, errorCorrectLevel: number) {
         var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
         if (rsBlock == undefined) { throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel); }
         var length = rsBlock.length / 3;
@@ -25,15 +23,15 @@ export class QRRSBlock {
         }
         return list;
     }
-    static getRsBlockTable(typeNumber: number, errorCorrectLevel: QRErrorCorrectLevel) {
+    static getRsBlockTable(typeNumber: number, errorCorrectLevel: number) {
         switch (errorCorrectLevel) {
-            case QRErrorCorrectLevel.L:
+            case 1:
                 return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-            case QRErrorCorrectLevel.M:
+            case 0:
                 return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
-            case QRErrorCorrectLevel.Q:
+            case 3:
                 return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
-            case QRErrorCorrectLevel.H:
+            case 2:
                 return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
             default:
                 return undefined;

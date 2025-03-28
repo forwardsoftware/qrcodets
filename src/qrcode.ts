@@ -1,6 +1,6 @@
-import { QRCodeModelImpl } from "./models";
+import { generateQRCodeModel } from "./models";
 import type { QRCodeDrawer, QRCodeOptions } from "./types";
-import { getQRErrorCorrectLevel, getTypeNumber } from "./utils";
+import { getTypeNumber } from "./utils";
 
 const DEFAULT_QRCODE_OPTIONS: QRCodeOptions = {
   size: 256,
@@ -46,12 +46,7 @@ export class QRCode {
 
     const typeNumber = this.options.type || getTypeNumber(this.content, this.options.correctionLevel);
 
-    const errorCorrectLevel = getQRErrorCorrectLevel(this.options.correctionLevel);
-
-    // TODO: evaluate moving all logic to a single function call to avoid the `QRCodeModel` class
-    const qrCodeModel = new QRCodeModelImpl(typeNumber, errorCorrectLevel);
-    qrCodeModel.addData(this.content);
-    qrCodeModel.make();
+    const qrCodeModel = generateQRCodeModel(typeNumber, this.options.correctionLevel, this.content);
 
     return this.renderer.draw(qrCodeModel, this.options);
   }

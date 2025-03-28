@@ -1,9 +1,36 @@
 import { HTMLDrawer } from "./drawers/HTMLDrawer";
 import { SVGDrawer } from "./drawers/SVGDrawer";
-import { QRErrorCorrectLevel } from "./enums";
 import { QRCode } from "./qrcode";
-import type { QRCodeCompatOptions, QRCodeDrawer, QRCodeOptions } from "./types";
-import { getQRCodeErrorCorrectionLevel } from "./utils";
+import type { QRCodeDrawer, QRCodeErrorCorrectionLevel, QRCodeOptions } from "./types";
+
+export enum QRErrorCorrectLevel {
+  L = 1,
+  M = 0,
+  Q = 3,
+  H = 2,
+}
+
+export interface QRCodeCompatOptions {
+  id?: string;
+
+  element?: HTMLElement;
+
+  width: number;
+
+  height: number;
+
+  typeNumber: number;
+
+  colorDark: string;
+
+  colorLight: string;
+
+  correctLevel: QRErrorCorrectLevel;
+
+  text?: string;
+
+  mode?: "svg" | "dom";
+}
 
 const DEFAULT_QRCODE_OPTIONS: QRCodeCompatOptions = {
   width: 256,
@@ -75,5 +102,20 @@ export class QRCodeCompat {
     }
 
     this.qrCode.clear();
+  }
+}
+
+function getQRCodeErrorCorrectionLevel(errorCorrectLevel: QRErrorCorrectLevel): QRCodeErrorCorrectionLevel {
+  switch (errorCorrectLevel) {
+    case QRErrorCorrectLevel.L:
+      return "L";
+    case QRErrorCorrectLevel.M:
+      return "M";
+    case QRErrorCorrectLevel.Q:
+      return "Q";
+    case QRErrorCorrectLevel.H:
+      return "H";
+    default:
+      return "H";
   }
 }

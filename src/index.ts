@@ -1,8 +1,7 @@
-export { QRErrorCorrectLevel } from "./enums";
-export * from "./types";
-
-export { QRCodeCompat } from "./compatibility";
 export { QRCode } from "./qrcode";
+export * from "./types";
 
 export { HTMLDrawer } from "./drawers/HTMLDrawer";
 export { SVGDrawer } from "./drawers/SVGDrawer";
+
+export { QRCodeCompat, QRCodeCompatOptions, QRErrorCorrectLevel } from "./compatibility";

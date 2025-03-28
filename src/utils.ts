@@ -1,39 +1,4 @@
-import { QRErrorCorrectLevel } from "./enums";
 import type { QRCodeErrorCorrectionLevel } from "./types";
-
-export function getQRErrorCorrectLevel(errorCorrectionLevel: QRCodeErrorCorrectionLevel): QRErrorCorrectLevel {
-  switch (errorCorrectionLevel) {
-    case "L":
-      return QRErrorCorrectLevel.L;
-
-    case "M":
-      return QRErrorCorrectLevel.M;
-
-    case "Q":
-      return QRErrorCorrectLevel.Q;
-
-    case "H":
-      return QRErrorCorrectLevel.H;
-
-    default:
-      return QRErrorCorrectLevel.H;
-  }
-}
-
-export function getQRCodeErrorCorrectionLevel(errorCorrectLevel: QRErrorCorrectLevel): QRCodeErrorCorrectionLevel {
-  switch (errorCorrectLevel) {
-    case QRErrorCorrectLevel.L:
-      return "L";
-    case QRErrorCorrectLevel.M:
-      return "M";
-    case QRErrorCorrectLevel.Q:
-      return "Q";
-    case QRErrorCorrectLevel.H:
-      return "H";
-    default:
-      return "H";
-  }
-}
 
 /**
  * Get the QR Code version/type number (1-40) based on text length
