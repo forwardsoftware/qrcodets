@@ -1,12 +1,6 @@
 import type { QRErrorCorrectLevel } from "./enums";
 
-export interface QRCodeModel {
-  getModuleCount(): number;
-
-  isDark(row: number, col: number): boolean;
-}
-
-export interface QRCodeOptions {
+export interface QRCodeCompatOptions {
   id?: string;
 
   element?: HTMLElement;
@@ -26,6 +20,12 @@ export interface QRCodeOptions {
   text?: string;
 
   mode?: "svg" | "dom";
+}
+
+export interface QRCodeModel {
+  getModuleCount(): number;
+
+  isDark(row: number, col: number): boolean;
 }
 
 export interface QRCodeDrawer {

@@ -1,15 +1,14 @@
 import { HTMLDrawer, SVGDrawer } from "./drawers";
 import { QRErrorCorrectLevel } from "./enums";
 import { QRCodeModelImpl } from "./models";
-import type { QRCodeDrawer, QRCodeOptions } from "./types";
-
+import type { QRCodeCompatOptions, QRCodeDrawer } from "./types";
 
 export class QRCodeCompat {
-  private _htOption: QRCodeOptions;
+  private _htOption: QRCodeCompatOptions;
   private _el?: HTMLElement | null;
   private _oDrawing?: QRCodeDrawer;
 
-  constructor(vOption: Partial<QRCodeOptions>) {
+  constructor(vOption: Partial<QRCodeCompatOptions>) {
     this._htOption = {
       ...DEFAULT_QRCODE_OPTIONS,
       ...vOption,
@@ -128,7 +127,7 @@ export class QRCodeCompat {
   }
 }
 
-const DEFAULT_QRCODE_OPTIONS: QRCodeOptions = {
+const DEFAULT_QRCODE_OPTIONS: QRCodeCompatOptions = {
   width: 256,
   height: 256,
   typeNumber: 4,

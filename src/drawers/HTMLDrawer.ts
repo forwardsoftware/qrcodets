@@ -1,4 +1,4 @@
-import type { QRCodeDrawer, QRCodeModel, QRCodeOptions } from "../types";
+import type { QRCodeCompatOptions, QRCodeDrawer, QRCodeModel } from "../types";
 
 export class HTMLDrawer implements QRCodeDrawer {
   // this Image contains 1px data
@@ -13,11 +13,11 @@ export class HTMLDrawer implements QRCodeDrawer {
 
   private imageElement: HTMLImageElement | null = null;
 
-  private qrCodeOptions: QRCodeOptions;
+  private qrCodeOptions: QRCodeCompatOptions;
 
   private isDataURISupported: boolean | null = null;
 
-  constructor(element: HTMLElement, qrCodeOptions: QRCodeOptions) {
+  constructor(element: HTMLElement, qrCodeOptions: QRCodeCompatOptions) {
     this.element = element;
     this.qrCodeOptions = qrCodeOptions;
 

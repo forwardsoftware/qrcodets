@@ -1,10 +1,10 @@
-import type { QRCodeDrawer, QRCodeModel, QRCodeOptions } from "../types";
+import type { QRCodeCompatOptions, QRCodeDrawer, QRCodeModel } from "../types";
 
 export class SVGDrawer implements QRCodeDrawer {
   private _el: HTMLElement;
-  private _htOption: QRCodeOptions;
+  private _htOption: QRCodeCompatOptions;
 
-  constructor(el: HTMLElement, htOption: QRCodeOptions) {
+  constructor(el: HTMLElement, htOption: QRCodeCompatOptions) {
     this._el = el;
     this._htOption = htOption;
   }
