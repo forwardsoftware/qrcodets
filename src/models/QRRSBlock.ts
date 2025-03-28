@@ -1,7 +1,11 @@
 export interface RSBlock {
-  totalCount: number;
+  readonly totalCount: number;
 
-  dataCount: number;
+  readonly dataCount: number;
+}
+
+export function calculateRSBlocksTotalDataCount(rsBlocks: Array<RSBlock>): number {
+  return rsBlocks.reduce((sum, block) => sum + block.dataCount, 0);
 }
 
 export function getRSBlocks(type: number, errorCorrectLevel: number): Array<RSBlock> {

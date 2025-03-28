@@ -3,7 +3,7 @@ import type { QRCodeModel } from "../types";
 import { createQR8bitByte, type QR8bitByte } from "./QR8bitByte";
 import { createQRBitBuffer, getQRBitBufferBit, padQRBitBuffer, validateQRBitBufferSize, type QRBitBuffer } from "./QRBitBuffer";
 import { QRPolynomial } from "./QRPolynomial";
-import { getRSBlocks, type RSBlock } from "./QRRSBlock";
+import { calculateRSBlocksTotalDataCount, getRSBlocks, type RSBlock } from "./QRRSBlock";
 import { getBCHTypeInfo, getBCHTypeNumber, getErrorCorrectPolynomial, getLostPoint, getMask, getPatternPosition } from "./utils";
 
 export class QRCodeModelImpl implements QRCodeModel {
@@ -27,7 +27,7 @@ export class QRCodeModelImpl implements QRCodeModel {
 
   static createData(typeNumber: number, errorCorrectLevel: number, dataList: QR8bitByte[]) {
     const rsBlocks = getRSBlocks(typeNumber, errorCorrectLevel);
-    const totalDataCount = this.calculateTotalDataCount(rsBlocks);
+    const totalDataCount = calculateRSBlocksTotalDataCount(rsBlocks);
 
     let buffer = createQRBitBuffer(typeNumber, dataList);
 
@@ -38,11 +38,6 @@ export class QRCodeModelImpl implements QRCodeModel {
     buffer = padQRBitBuffer(buffer, totalDataCount);
 
     return this.createBytes(buffer, rsBlocks);
-  }
-
-  // TODO: extract to RSBlock utils
-  private static calculateTotalDataCount(rsBlocks: RSBlock[]): number {
-    return rsBlocks.reduce((sum, block) => sum + block.dataCount, 0);
   }
 
   static createBytes(buffer: QRBitBuffer, rsBlocks: RSBlock[]): number[] {
