@@ -1,7 +1,7 @@
 export { QRCode } from "./qrcode";
 export * from "./types";
 
-export { HTMLDrawer } from "./drawers/HTMLDrawer";
-export { SVGDrawer } from "./drawers/SVGDrawer";
+export { HTMLRenderer } from "./renderers/HTMLRenderer";
+export { SVGRenderer } from "./renderers/SVGRenderer";
 
 export { QRCodeCompat, QRCodeCompatOptions, QRErrorCorrectLevel } from "./compatibility";

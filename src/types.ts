@@ -60,10 +60,10 @@ export interface QRCodeModel {
   isDark(row: number, col: number): boolean;
 }
 
-export type QRCodeDrawerOptions = Pick<QRCodeOptions, "colorDark" | "colorLight" | "size">;
+export type QRCodeRendererOptions = Pick<QRCodeOptions, "colorDark" | "colorLight" | "size">;
 
-export interface QRCodeDrawer {
-  draw(model: QRCodeModel, options: QRCodeDrawerOptions): boolean;
+export interface QRCodeRenderer<T> {
+  draw(model: QRCodeModel, options: QRCodeRendererOptions): T;
 
   clear(): boolean;
 }
