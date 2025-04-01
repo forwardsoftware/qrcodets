@@ -1,8 +1,10 @@
 import type { QRCodeModel, QRCodeRenderer, QRCodeRendererOptions } from "../types";
 
-// TODO: turn into function that returns QRCodeDrawer
-
 export function HTMLRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
+  return isCanvasSupported() ? CanvasRenderer(element) : DOMRenderer(element);
+}
+
+function CanvasRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
   const IMAGE_B64 =
     "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
@@ -14,24 +16,62 @@ export function HTMLRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
 
   let isDataURISupported: boolean | null = null;
 
-  function isCanvasSupported(): boolean {
-    return typeof CanvasRenderingContext2D != "undefined";
+  function _safeSetDataURI(successCallback: () => void, errorCallback: () => void): void {
+    // Check it just once
+    if (isDataURISupported === null) {
+      const el = document.createElement("img");
+
+      const fOnError = () => {
+        isDataURISupported = false;
+
+        if (errorCallback) {
+          errorCallback();
+        }
+      };
+
+      const fOnSuccess = () => {
+        isDataURISupported = true;
+
+        if (successCallback) {
+          successCallback();
+        }
+      };
+
+      el.onabort = fOnError;
+      el.onerror = fOnError;
+      el.onload = fOnSuccess;
+      el.src = IMAGE_B64;
+    } else if (isDataURISupported === true && successCallback) {
+      successCallback();
+    } else if (isDataURISupported === false && errorCallback) {
+      errorCallback();
+    }
   }
 
-  function getAndroidPlatformDetails(): [boolean, number] {
-    const userAgent = navigator.userAgent;
-
-    if (/android/i.test(userAgent)) {
-      const aMat = userAgent.toString().match(/android ([0-9]\.[0-9])/i);
-      if (aMat && aMat[1]) {
-        const version = parseFloat(aMat[1]);
-        return [!!version, version];
-      }
-
-      return [true, 0];
+  function _onMakeImage(): void {
+    if (!canvasElement || !imageElement) {
+      console.warn("[HTMLRenderer][_onMakeImage] Canvas elements have not been initialized properly");
+      return;
     }
 
-    return [false, -1];
+    imageElement.src = canvasElement.toDataURL("image/png");
+    imageElement.style.display = "block";
+
+    canvasElement.style.display = "none";
+  }
+
+  /**
+   * Clear Canvas
+   */
+  function clearCanvas(): boolean {
+    if (!canvasElement || !canvasContext) {
+      console.warn("[HTMLRenderer][clearCanvas] Canvas context has not been initialized properly");
+      return false;
+    }
+
+    canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+    return true;
   }
 
   /**
@@ -96,50 +136,17 @@ export function HTMLRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
     return true;
   }
 
-  function _safeSetDataURI(successCallback: () => void, errorCallback: () => void): void {
-    // Check it just once
-    if (isDataURISupported === null) {
-      const el = document.createElement("img");
+  return {
+    draw: (model: QRCodeModel, options: QRCodeRendererOptions): boolean => {
+      return drawWithCanvas(model, options);
+    },
+    clear(): boolean {
+      return clearCanvas();
+    },
+  };
+}
 
-      const fOnError = () => {
-        isDataURISupported = false;
-
-        if (errorCallback) {
-          errorCallback();
-        }
-      };
-
-      const fOnSuccess = () => {
-        isDataURISupported = true;
-
-        if (successCallback) {
-          successCallback();
-        }
-      };
-
-      el.onabort = fOnError;
-      el.onerror = fOnError;
-      el.onload = fOnSuccess;
-      el.src = IMAGE_B64;
-    } else if (isDataURISupported === true && successCallback) {
-      successCallback();
-    } else if (isDataURISupported === false && errorCallback) {
-      errorCallback();
-    }
-  }
-
-  function _onMakeImage(): void {
-    if (!canvasElement || !imageElement) {
-      console.warn("[HTMLRenderer][_onMakeImage] Canvas elements have not been initialized properly");
-      return;
-    }
-
-    imageElement.src = canvasElement.toDataURL("image/png");
-    imageElement.style.display = "block";
-
-    canvasElement.style.display = "none";
-  }
-
+function DOMRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
   /**
    * Draw the QR Code using DOM elements
    *
@@ -187,20 +194,6 @@ export function HTMLRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
   }
 
   /**
-   * Clear Canvas
-   */
-  function clearCanvas(): boolean {
-    if (!canvasElement || !canvasContext) {
-      console.warn("[HTMLRenderer][clearCanvas] Canvas context has not been initialized properly");
-      return false;
-    }
-
-    canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-    return true;
-  }
-
-  /**
    * Remove drawn QR Code HTML elements
    */
   function clearDOMElements(): boolean {
@@ -209,19 +202,31 @@ export function HTMLRenderer(element: HTMLElement): QRCodeRenderer<boolean> {
   }
 
   return {
-    draw: (model: QRCodeModel, options: QRCodeRendererOptions): boolean => {
-      if (!isCanvasSupported()) {
-        return drawWithDOMElements(model, options);
-      }
-
-      return drawWithCanvas(model, options);
-    },
-    clear(): boolean {
-      if (!isCanvasSupported()) {
-        return clearDOMElements();
-      }
-
-      return clearCanvas();
-    },
+    draw: drawWithDOMElements,
+    clear: clearDOMElements,
   };
+}
+
+//
+// INTERNAL UTILS
+//
+
+function isCanvasSupported(): boolean {
+  return typeof CanvasRenderingContext2D != "undefined";
+}
+
+function getAndroidPlatformDetails(): [boolean, number] {
+  const userAgent = navigator.userAgent;
+
+  if (/android/i.test(userAgent)) {
+    const aMat = userAgent.toString().match(/android ([0-9]\.[0-9])/i);
+    if (aMat && aMat[1]) {
+      const version = parseFloat(aMat[1]);
+      return [!!version, version];
+    }
+
+    return [true, 0];
+  }
+
+  return [false, -1];
 }
