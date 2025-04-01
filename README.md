@@ -42,7 +42,18 @@ new QRCode("https://example.com", {
   size: 256,
   colorDark: "#000000",
   colorLight: "#ffffff",
-}).renderTo(SVG(document.getElementById("qrcode")!));
+}).renderTo(SVG(document.getElementById("qrcode")));
+
+```
+
+### Fluent API
+
+```javascript
+import { QRCode, HTMLRenderer as HTML } from "@forward-software/qrcodets";
+
+QRCode.from("https://example.com")
+  .withOptions({ correctionLevel: "H", size: 256 })
+  .renderTo(HTML(document.getElementById("qrcode")));
 
 ```
 
