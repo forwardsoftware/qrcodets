@@ -1,5 +1,5 @@
 {
-  "name": "qrcode-ts",
+  "name": "@forward-software/qrcodets",
   "version": "1.0.0",
   "description": "QR Code generator written in TypeScript",
   "author": "ForWarD Software (https://github.com/forwardsoftware)",
