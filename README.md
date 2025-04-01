@@ -9,7 +9,7 @@
 To install the package:
 
 ```bash
-npm i qrcode-ts
+npm i @forward-software/qrcodets
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ You can import and use QRCodeTS in your project as follows
 ### Render using HTML API (DOM or Canvas)
 
 ```javascript
-import { QRCode, HTMLRenderer as HTML } from "qrcode-ts";
+import { QRCode, HTMLRenderer as HTML } from "@forward-software/qrcodets";
 
 new QRCode("https://example.com", {
   type: 4,
@@ -34,7 +34,7 @@ new QRCode("https://example.com", {
 ### Render using an SVG
 
 ```javascript
-import { QRCode, SVGRenderer as SVG } from "qrcode-ts";
+import { QRCode, SVGRenderer as SVG } from "@forward-software/qrcodets";
 
 new QRCode("https://example.com", {
   type: 4,
@@ -49,7 +49,7 @@ new QRCode("https://example.com", {
 ### Fluent API
 
 ```javascript
-import { QRCode, HTMLRenderer as HTML } from "qrcode-ts";
+import { QRCode, HTMLRenderer as HTML } from "@forward-software/qrcodets";
 
 QRCode.from("https://example.com")
   .withOptions({ correctionLevel: "H", size: 256 })
@@ -86,7 +86,7 @@ The error correction level of a QR Code
 You can replace [QRCodeTS](https://github.com/lilRedaka/qrcodets) by [lilRedaka](https://github.com/lilRedaka) and keep using the same code as before by importing and using the `QRCodeCompat` compatibility class in your project.
 
 ```javascript
-import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "qrcode-ts";
+import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "@forward-software/qrcodets";
 
 const params = {
   id: "qrcode",
