@@ -14,33 +14,35 @@ npm i @forward-software/qrcodets
 
 ## Usage
 
-You can import and use QRCodeTS in your project as follows:
+You can import and use QRCodeTS in your project as follows
+
+### Render using HTML API (DOM or Canvas)
 
 ```javascript
-import { QRCode, HTMLDrawer, SVGDrawer } from "@forward-software/qrcodets";
+import { QRCode, HTMLRenderer as HTML } from "@forward-software/qrcodets";
 
-// To render using HTML API (DOM or Canvas)
 new QRCode("https://example.com", {
   type: 4,
   correctionLevel: "H",
   size: 256,
   colorDark: "#000000",
   colorLight: "#ffffff",
-})
-  .renderTo(new HTMLDrawer(document.getElementById("qrcode")))
-  .draw();
+}).renderTo(HTML(document.getElementById("qrcode")));
 
+```
 
-// To render using SVG
+### Render using an SVG
+
+```javascript
+import { QRCode, SVGRenderer as SVG } from "@forward-software/qrcodets";
+
 new QRCode("https://example.com", {
   type: 4,
   correctionLevel: "H",
   size: 256,
   colorDark: "#000000",
   colorLight: "#ffffff",
-})
-  .renderTo(new SVGDrawer(document.getElementById("qrcode")))
-  .draw();
+}).renderTo(SVG(document.getElementById("qrcode")!));
 
 ```
 
