@@ -1,4 +1,4 @@
-import { HTMLDrawer, QRCode, QRCodeCompat, QRErrorCorrectLevel, SVGDrawer } from "../../dist";
+import { HTMLRenderer as HTML, QRCode, QRCodeCompat, QRErrorCorrectLevel, SVGRenderer as SVG } from "../../dist";
 
 import "./style.css";
 
@@ -9,9 +9,7 @@ new QRCode("https://example.com", {
   size: 256,
   colorDark: "#000000",
   colorLight: "#ffffff",
-})
-  .renderTo(new SVGDrawer(document.getElementById("qrcode-svg")!))
-  .draw();
+}).renderTo(SVG(document.getElementById("qrcode-svg")!));
 
 // as DOM
 new QRCode("https://example.com", {
@@ -20,9 +18,7 @@ new QRCode("https://example.com", {
   size: 256,
   colorDark: "#000000",
   colorLight: "#ffffff",
-})
-  .renderTo(new HTMLDrawer(document.getElementById("qrcode-dom")!))
-  .draw();
+}).renderTo(HTML(document.getElementById("qrcode-dom")!));
 
 // as SVG by ID using Compatibility mode
 new QRCodeCompat({
