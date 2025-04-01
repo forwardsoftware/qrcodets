@@ -1,5 +1,5 @@
 import { generateQRCodeModel } from "./models";
-import type { QRCodeDrawer, QRCodeOptions } from "./types";
+import type { QRCodeOptions, QRCodeRenderer } from "./types";
 import { getTypeNumber } from "./utils";
 
 const DEFAULT_QRCODE_OPTIONS: QRCodeOptions = {
@@ -14,8 +14,6 @@ export class QRCode {
 
   private options: QRCodeOptions;
 
-  private renderer?: QRCodeDrawer;
-
   constructor(content: string, options?: Partial<QRCodeOptions>) {
     this.content = content;
     this.options = {
@@ -25,41 +23,22 @@ export class QRCode {
   }
 
   /**
-   * Assigns a QRCodeDrawer to the QRCode instance and returns the instance itself.
-   *
-   * @param {QRCodeDrawer} renderer - The QRCodeDrawer to use.
-   * @returns {QRCode} The QRCode instance.
-   */
-  renderTo(renderer: QRCodeDrawer): QRCode {
-    this.renderer = renderer;
-    return this;
-  }
-
-  /**
    * Draw the QR Code using the provided renderer
+   *
+   * @param {QRCodeRenderer} renderer - The QRCodeRenderer to use.
    */
-  draw(): boolean {
-    if (!this.renderer) {
-      console.error("Failed to draw QRCode: renderer not set for QRCode instance. Did you forget to call 'renderTo' method?");
-      return false;
-    }
-
+  renderTo<T>(renderer: QRCodeRenderer<T>): T {
     const typeNumber = this.options.type || getTypeNumber(this.content, this.options.correctionLevel);
 
     const qrCodeModel = generateQRCodeModel(typeNumber, this.options.correctionLevel, this.content);
 
-    return this.renderer.draw(qrCodeModel, this.options);
+    return renderer.draw(qrCodeModel, this.options);
   }
 
   /**
    * Clear the QRCode
    */
-  clear(): boolean {
-    if (!this.renderer) {
-      console.error("Failed to clear QRCode: renderer not set for QRCode instance. Did you forget to call 'renderTo' method?");
-      return false;
-    }
-
-    return this.renderer.clear();
+  clearFrom<T>(renderer: QRCodeRenderer<T>): boolean {
+    return renderer.clear();
   }
 }

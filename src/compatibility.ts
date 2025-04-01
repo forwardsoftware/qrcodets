@@ -1,7 +1,7 @@
-import { HTMLDrawer } from "./drawers/HTMLDrawer";
-import { SVGDrawer } from "./drawers/SVGDrawer";
 import { QRCode } from "./qrcode";
-import type { QRCodeDrawer, QRCodeErrorCorrectionLevel, QRCodeOptions } from "./types";
+import { HTMLRenderer } from "./renderers/HTMLRenderer";
+import { SVGRenderer } from "./renderers/SVGRenderer";
+import type { QRCodeErrorCorrectionLevel, QRCodeOptions, QRCodeRenderer } from "./types";
 
 export enum QRErrorCorrectLevel {
   L = 1,
@@ -46,7 +46,7 @@ export class QRCodeCompat {
 
   private qrCode: QRCode | null = null;
 
-  private _oDrawing: QRCodeDrawer;
+  private renderer: QRCodeRenderer<unknown>;
 
   constructor(vOption: Partial<QRCodeCompatOptions>) {
     let el: HTMLElement | undefined | null;
@@ -69,9 +69,9 @@ export class QRCodeCompat {
     };
 
     if (vOption.mode == "svg") {
-      this._oDrawing = new SVGDrawer(el);
+      this.renderer = SVGRenderer(el);
     } else {
-      this._oDrawing = new HTMLDrawer(el);
+      this.renderer = HTMLRenderer(el);
     }
 
     if (vOption.text) {
@@ -86,10 +86,10 @@ export class QRCodeCompat {
    */
   makeCode(sText: string): void {
     if (!this.qrCode) {
-      this.qrCode = new QRCode(sText, this._htOption).renderTo(this._oDrawing);
+      this.qrCode = new QRCode(sText, this._htOption);
     }
 
-    this.qrCode.draw();
+    this.qrCode.renderTo(this.renderer);
   }
 
   /**
@@ -101,7 +101,7 @@ export class QRCodeCompat {
       return;
     }
 
-    this.qrCode.clear();
+    this.qrCode.clearFrom(this.renderer);
   }
 }
 
