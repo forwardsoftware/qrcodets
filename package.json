@@ -1,7 +1,7 @@
 {
-  "name": "@forward-software/qrcodets",
+  "name": "qrcode-ts",
   "version": "1.0.0",
-  "description": "qrcodejs with full typescript hint and ES6 export",
+  "description": "QR Code generator written in TypeScript",
   "author": "ForWarD Software (https://github.com/forwardsoftware)",
   "contributors": [
     "SimonLee (https://github.com/lilRedaka)",
@@ -9,7 +9,12 @@
   ],
   "license": "MIT",
   "repository": "https://github.com/forwardsoftware/qrcodets",
-  "keywords": [],
+  "keywords": [
+    "qrcode",
+    "qr-code",
+    "qrcode-generator",
+    "qr-generator"
+  ],
   "homepage": "https://github.com/forwardsoftware/qrcodets#readme",
   "bugs": "https://github.com/forwardsoftware/qrcodets/issues",
   "scripts": {
