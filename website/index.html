@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>QRCodeTS Sample App</title>
+</head>
+
+<body>
+  <table>
+    <tr>
+      <th>Mode</th>
+      <th>SVG</th>
+      <th>DOM</th>
+    </tr>
+
+    <tr>
+      <td>Basic</td>
+
+      <td>
+        <p id="qrcode-svg"></p>
+      </td>
+
+      <td>
+        <p id="qrcode-dom"></p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Compatibility (by ID)</td>
+
+      <td>
+        <p id="qrcode-compat-svg"></p>
+      </td>
+
+      <td>
+        <p id="qrcode-compat-dom"></p>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Compatibility (by HTMLElement)</td>
+
+      <td>
+        <p id="qrcode-compat-el-svg"></p>
+      </td>
+
+      <td>
+        <p id="qrcode-compat-el-dom"></p>
+      </td>
+    </tr>
+  </table>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

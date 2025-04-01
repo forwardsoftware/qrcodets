@@ -1,7 +1,7 @@
 {
-  "name": "@forward-software/qrcodets",
+  "name": "qrcode-ts",
   "version": "1.0.0",
-  "description": "qrcodejs with full typescript hint and ES6 export",
+  "description": "QR Code generator written in TypeScript",
   "author": "ForWarD Software (https://github.com/forwardsoftware)",
   "contributors": [
     "SimonLee (https://github.com/lilRedaka)",
@@ -9,11 +9,18 @@
   ],
   "license": "MIT",
   "repository": "https://github.com/forwardsoftware/qrcodets",
-  "keywords": [],
+  "keywords": [
+    "qrcode",
+    "qr-code",
+    "qrcode-generator",
+    "qr-generator"
+  ],
   "homepage": "https://github.com/forwardsoftware/qrcodets#readme",
   "bugs": "https://github.com/forwardsoftware/qrcodets/issues",
   "scripts": {
-    "build": "tsc"
+    "start": "vite serve website --host",
+    "build": "tsc --removeComments && tsc --declaration --emitDeclarationOnly",
+    "clean": "rimraf dist"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,6 +29,8 @@
   ],
   "packageManager": "pnpm@10.7.0+sha512.6b865ad4b62a1d9842b61d674a393903b871d9244954f652b8842c2b553c72176b278f64c463e52d40fff8aba385c235c8c9ecf5cc7de4fd78b8bb6d49633ab6",
   "devDependencies": {
-    "typescript": "^5.8.2"
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.3"
   }
 }

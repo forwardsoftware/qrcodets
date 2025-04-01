@@ -9,15 +9,84 @@
 To install the package:
 
 ```bash
-npm i @forward-software/qrcodets
+npm i qrcode-ts
 ```
 
 ## Usage
 
-You can import and use QRCodeTS in your project as follows:
+You can import and use QRCodeTS in your project as follows
+
+### Render using HTML API (DOM or Canvas)
 
 ```javascript
-import QRCode from "@forward-software/qrcodets";
+import { QRCode, HTMLRenderer as HTML } from "qrcode-ts";
+
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+}).renderTo(HTML(document.getElementById("qrcode")));
+
+```
+
+### Render using an SVG
+
+```javascript
+import { QRCode, SVGRenderer as SVG } from "qrcode-ts";
+
+new QRCode("https://example.com", {
+  type: 4,
+  correctionLevel: "H",
+  size: 256,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+}).renderTo(SVG(document.getElementById("qrcode")));
+
+```
+
+### Fluent API
+
+```javascript
+import { QRCode, HTMLRenderer as HTML } from "qrcode-ts";
+
+QRCode.from("https://example.com")
+  .withOptions({ correctionLevel: "H", size: 256 })
+  .renderTo(HTML(document.getElementById("qrcode")));
+
+```
+
+### Options
+
+| Name              | Type                                                      | Description                                                                                                                                                                                                 | Default     |
+| ----------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `size`            | Number                                                    | The physical size of the QR Code in pixels.                                                                                                                                                                 | `256`       |
+| `colorDark`       | String                                                    | The color of the dark modules (QR Code pixels).<br/>Accepts any valid CSS color string.                                                                                                                     | `"#000000"` |
+| `colorLight`      | String                                                    | The color of the light modules (background).<br/>Accepts any valid CSS color string.                                                                                                                        | `"#ffffff"` |
+| `type`            | Number                                                    | The QR Code version/type number (1-40).<br/><br/>Higher values increase the size and data capacity of the QR Code.<br/><br/>**NOTE:** If not set, the library will try to compute it based on content size. | `undefined` |
+| `correctionLevel` | [QRCodeErrorCorrectionLevel](#qrcodeerrorcorrectionlevel) | The error correction level of the QR Code.                                                                                                                                                                  | `"H"`       |
+
+
+#### QRCodeErrorCorrectionLevel
+
+The error correction level of a QR Code
+
+| Value | Description                       |
+| ----- | --------------------------------- |
+| `"L"` | (Low): ~7% error correction       |
+| `"M"` | (Medium): ~15% error correction   |
+| `"Q"` | (Quartile): ~25% error correction |
+| `"H"` | (High): ~30% error correction     |
+
+
+
+## Migrating from QRCodeTS by lilRedaka?
+
+You can replace [QRCodeTS](https://github.com/lilRedaka/qrcodets) by [lilRedaka](https://github.com/lilRedaka) and keep using the same code as before by importing and using the `QRCodeCompat` compatibility class in your project.
+
+```javascript
+import { QRCodeCompat as QRCode, QRErrorCorrectLevel } from "qrcode-ts";
 
 const params = {
   id: "qrcode",
@@ -35,7 +104,7 @@ const params = {
 const qrCode = new QRCode(params);
 ```
 
-## Initialization Parameters
+#### Initialization Parameters
 
 The QRCode class takes an object with the following properties as initialization parameters:
 
