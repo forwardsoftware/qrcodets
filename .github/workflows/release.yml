@@ -53,18 +53,12 @@ jobs:
             echo "release=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Setup pnpm
+      - name: Setup pnpm & Node.js
         if: steps.check.outputs.release == 'true'
         uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
         with:
+          runtime: node@latest
           install: false
-
-      - name: Setup NodeJS
-        if: steps.check.outputs.release == 'true'
-        uses: actions/setup-node@v7
-        with:
-          node-version: latest
-          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         if: steps.check.outputs.release == 'true'
