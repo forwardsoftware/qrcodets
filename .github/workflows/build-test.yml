@@ -17,13 +17,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
-
-      - name: Setup NodeJS
-        uses: actions/setup-node@v7
+      - name: Setup pnpm & Node.js
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
         with:
-          cache: pnpm
+          runtime: node@lts
+          cache: true
+          install: false
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
