@@ -133,6 +133,10 @@ The QRCode class takes an object with the following properties as initialization
 - mode (optional): "svg" | "dom"
   - The rendering mode. Either 'svg' for SVG rendering or 'dom' for HTML DOM rendering.
 
+## Changelog
+
+Release notes for every version are published on the [GitHub Releases](https://github.com/forwardsoftware/qrcodets/releases) page.
+
 ## License
 
 MIT License
