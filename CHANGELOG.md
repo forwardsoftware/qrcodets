@@ -1,5 +1,7 @@
 # Changelog
 
+> This file is no longer updated. Release notes for newer versions are published on the [GitHub Releases](https://github.com/forwardsoftware/qrcodets/releases) page.
+
 ## 1.0.0 (2025-04-01)
 
 
